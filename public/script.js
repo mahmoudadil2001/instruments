@@ -23,6 +23,8 @@ let username = '';
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
+let recordingTimer = null;
+let recordingStartTime = null;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
@@ -158,9 +160,17 @@ async function startRecording() {
         
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            
+            // Show uploading indicator
+            recordingIndicator.innerHTML = '<span>📤 جاري الإرسال...</span>';
+            
             const reader = new FileReader();
             reader.onload = () => {
                 socket.emit('send-voice', { voiceData: reader.result });
+                // Hide indicator after sending
+                setTimeout(() => {
+                    recordingIndicator.classList.add('hidden');
+                }, 1000);
             };
             reader.readAsDataURL(audioBlob);
             
@@ -170,8 +180,12 @@ async function startRecording() {
         
         mediaRecorder.start();
         isRecording = true;
+        recordingStartTime = Date.now();
         voiceBtn.textContent = '⏹️';
         recordingIndicator.classList.remove('hidden');
+        
+        // Start timer
+        recordingTimer = setInterval(updateRecordingTimer, 100);
         
     } catch (error) {
         console.error('Error accessing microphone:', error);
@@ -184,7 +198,12 @@ function stopRecording() {
         mediaRecorder.stop();
         isRecording = false;
         voiceBtn.textContent = '🎤';
-        recordingIndicator.classList.add('hidden');
+        
+        // Clear timer
+        if (recordingTimer) {
+            clearInterval(recordingTimer);
+            recordingTimer = null;
+        }
     }
 }
 
@@ -262,6 +281,19 @@ function generateUserAvatar(userName) {
         gradient: gradients[gradientIndex],
         letter: firstLetter
     };
+}
+
+// Update recording timer
+function updateRecordingTimer() {
+    if (recordingStartTime && isRecording) {
+        const elapsed = Date.now() - recordingStartTime;
+        const seconds = Math.floor(elapsed / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        
+        const timeString = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        recordingIndicator.innerHTML = `<span>🔴 تسجيل... ${timeString} - اضغط للتوقف</span>`;
+    }
 }
 
 // Update online users list

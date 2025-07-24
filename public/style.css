@@ -301,6 +301,8 @@ body {
     color: #cc0000;
     text-align: center;
     animation: pulse 1s infinite;
+    font-weight: bold;
+    font-family: monospace;
 }
 
 @keyframes pulse {
