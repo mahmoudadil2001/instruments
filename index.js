@@ -60,13 +60,28 @@ io.on('connection', (socket) => {
 
   // Handle text messages
   socket.on('send-message', (data) => {
-    const messageData = {
-      id: Date.now(),
-      username: socket.username,
-      message: data.message,
-      type: 'text',
-      timestamp: new Date().toLocaleTimeString()
-    };
+    let messageData;
+    
+    if (data.message && typeof data.message === 'object' && data.message.type === 'file') {
+      // Handle file messages
+      messageData = {
+        id: Date.now(),
+        username: socket.username,
+        message: data.message,
+        type: 'file',
+        timestamp: new Date().toLocaleTimeString()
+      };
+    } else {
+      // Handle text messages
+      messageData = {
+        id: Date.now(),
+        username: socket.username,
+        message: data.message,
+        type: 'text',
+        timestamp: new Date().toLocaleTimeString()
+      };
+    }
+    
     io.emit('new-message', messageData);
   });
 

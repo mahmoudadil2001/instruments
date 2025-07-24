@@ -116,23 +116,17 @@ async function uploadFile(file) {
         const result = await response.json();
         
         if (result.success) {
-            // Send file message through socket
+            // Send file message through socket to all users
             const fileMessage = {
-                type: 'file',
-                fileUrl: result.fileUrl,
-                filename: result.filename,
-                mimetype: result.mimetype
+                message: {
+                    type: 'file',
+                    fileUrl: result.fileUrl,
+                    filename: result.filename,
+                    mimetype: result.mimetype
+                }
             };
             
-            // Display file message
-            displayMessage({
-                username: username,
-                message: fileMessage,
-                type: 'file',
-                timestamp: new Date().toLocaleTimeString()
-            }, true);
-            
-            // Emit to other users
+            // Send to all users including sender
             socket.emit('send-message', fileMessage);
         } else {
             alert('File upload failed');
