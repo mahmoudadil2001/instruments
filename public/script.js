@@ -248,20 +248,63 @@ function displaySystemMessage(message) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
+// Generate random avatar for user
+function generateUserAvatar(userName) {
+    const gradients = [
+        'gradient-1', 'gradient-2', 'gradient-3', 'gradient-4', 'gradient-5',
+        'gradient-6', 'gradient-7', 'gradient-8', 'gradient-9', 'gradient-10'
+    ];
+    
+    // Use username to generate consistent random avatar
+    let hash = 0;
+    for (let i = 0; i < userName.length; i++) {
+        hash = userName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    const gradientIndex = Math.abs(hash) % gradients.length;
+    const firstLetter = userName.charAt(0).toUpperCase();
+    
+    return {
+        gradient: gradients[gradientIndex],
+        letter: firstLetter
+    };
+}
+
 // Update online users list
 function updateUsersList(users) {
     usersList.innerHTML = '';
     users.forEach(user => {
         const li = document.createElement('li');
-        li.textContent = user;
+        
+        // Create avatar
+        const avatar = generateUserAvatar(user);
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = `user-avatar ${avatar.gradient}`;
+        avatarDiv.textContent = avatar.letter;
+        
+        // Create name span
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'user-name';
+        nameSpan.textContent = user;
+        
+        // Create status span
+        const statusSpan = document.createElement('span');
+        statusSpan.className = 'user-status';
+        statusSpan.textContent = '●';
+        
+        li.appendChild(avatarDiv);
+        li.appendChild(nameSpan);
+        li.appendChild(statusSpan);
+        
         if (user === username) {
-            li.style.fontWeight = 'bold';
-            li.textContent += ' (You)';
+            nameSpan.style.fontWeight = 'bold';
+            nameSpan.textContent += ' (أنت)';
         }
+        
         usersList.appendChild(li);
     });
     
-    onlineCountSpan.textContent = `${users.length} online`;
+    onlineCountSpan.textContent = `${users.length} متصل`;
 }
 
 // Socket event listeners

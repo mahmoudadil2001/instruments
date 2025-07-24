@@ -131,6 +131,44 @@ body {
     border-radius: 5px;
     border: 1px solid #e9ecef;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.user-avatar.gradient-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+.user-avatar.gradient-2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+.user-avatar.gradient-3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.user-avatar.gradient-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+.user-avatar.gradient-5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+.user-avatar.gradient-6 { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+.user-avatar.gradient-7 { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
+.user-avatar.gradient-8 { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+.user-avatar.gradient-9 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+.user-avatar.gradient-10 { background: linear-gradient(135deg, #fad0c4, #ffd1ff); }
+
+.user-name {
+    flex: 1;
+}
+
+.user-status {
+    font-size: 0.8rem;
+    color: #28a745;
+    font-weight: normal;
 }
 
 /* Chat Main */
