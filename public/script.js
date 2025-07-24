@@ -1,0 +1,293 @@
+
+// Initialize Socket.io
+const socket = io();
+
+// DOM elements
+const usernameModal = document.getElementById('usernameModal');
+const usernameInput = document.getElementById('usernameInput');
+const joinBtn = document.getElementById('joinBtn');
+const chatContainer = document.getElementById('chatContainer');
+const currentUserSpan = document.getElementById('currentUser');
+const onlineCountSpan = document.getElementById('onlineCount');
+const usersList = document.getElementById('usersList');
+const messagesContainer = document.getElementById('messagesContainer');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const fileBtn = document.getElementById('fileBtn');
+const fileInput = document.getElementById('fileInput');
+const voiceBtn = document.getElementById('voiceBtn');
+const recordingIndicator = document.getElementById('recordingIndicator');
+
+// Global variables
+let username = '';
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    // Focus on username input
+    usernameInput.focus();
+    
+    // Join chat on Enter key
+    usernameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            joinChat();
+        }
+    });
+    
+    // Send message on Enter key
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+});
+
+// Event listeners
+joinBtn.addEventListener('click', joinChat);
+sendBtn.addEventListener('click', sendMessage);
+fileBtn.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', handleFileUpload);
+voiceBtn.addEventListener('click', toggleVoiceRecording);
+
+// Handle paste events for images
+document.addEventListener('paste', (e) => {
+    const items = e.clipboardData.items;
+    for (let item of items) {
+        if (item.type.indexOf('image') !== -1) {
+            const blob = item.getAsFile();
+            uploadFile(blob);
+            break;
+        }
+    }
+});
+
+// Join chat function
+function joinChat() {
+    const inputUsername = usernameInput.value.trim();
+    if (inputUsername.length < 2) {
+        alert('Username must be at least 2 characters long');
+        return;
+    }
+    
+    username = inputUsername;
+    currentUserSpan.textContent = `Welcome, ${username}!`;
+    
+    // Hide modal and show chat
+    usernameModal.classList.add('hidden');
+    chatContainer.classList.remove('hidden');
+    
+    // Join the chat room
+    socket.emit('user-join', username);
+    
+    // Focus on message input
+    messageInput.focus();
+}
+
+// Send text message
+function sendMessage() {
+    const message = messageInput.value.trim();
+    if (message === '') return;
+    
+    socket.emit('send-message', { message });
+    messageInput.value = '';
+}
+
+// Handle file upload
+function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        uploadFile(file);
+    }
+}
+
+// Upload file function
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Send file message through socket
+            const fileMessage = {
+                type: 'file',
+                fileUrl: result.fileUrl,
+                filename: result.filename,
+                mimetype: result.mimetype
+            };
+            
+            // Display file message
+            displayMessage({
+                username: username,
+                message: fileMessage,
+                type: 'file',
+                timestamp: new Date().toLocaleTimeString()
+            }, true);
+            
+            // Emit to other users
+            socket.emit('send-message', fileMessage);
+        } else {
+            alert('File upload failed');
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('File upload failed');
+    }
+}
+
+// Voice recording functions
+async function toggleVoiceRecording() {
+    if (!isRecording) {
+        await startRecording();
+    } else {
+        stopRecording();
+    }
+}
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const reader = new FileReader();
+            reader.onload = () => {
+                socket.emit('send-voice', { voiceData: reader.result });
+            };
+            reader.readAsDataURL(audioBlob);
+            
+            // Stop all tracks
+            stream.getTracks().forEach(track => track.stop());
+        };
+        
+        mediaRecorder.start();
+        isRecording = true;
+        voiceBtn.textContent = '⏹️';
+        recordingIndicator.classList.remove('hidden');
+        
+    } catch (error) {
+        console.error('Error accessing microphone:', error);
+        alert('Could not access microphone');
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        voiceBtn.textContent = '🎤';
+        recordingIndicator.classList.add('hidden');
+    }
+}
+
+// Display message function
+function displayMessage(data, isOwn = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isOwn ? 'own' : ''}`;
+    
+    const headerDiv = document.createElement('div');
+    headerDiv.className = 'message-header';
+    headerDiv.innerHTML = `<span>${data.username}</span><span>${data.timestamp}</span>`;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    
+    if (data.type === 'voice') {
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.src = data.voiceData;
+        contentDiv.appendChild(audio);
+    } else if (data.type === 'file') {
+        const fileData = typeof data.message === 'string' ? JSON.parse(data.message) : data.message;
+        
+        if (fileData.mimetype && fileData.mimetype.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = fileData.fileUrl;
+            img.className = 'message-image';
+            img.alt = fileData.filename;
+            contentDiv.appendChild(img);
+        } else {
+            const link = document.createElement('a');
+            link.href = fileData.fileUrl;
+            link.textContent = `📎 ${fileData.filename}`;
+            link.target = '_blank';
+            contentDiv.appendChild(link);
+        }
+    } else {
+        contentDiv.textContent = data.message;
+    }
+    
+    messageDiv.appendChild(headerDiv);
+    messageDiv.appendChild(contentDiv);
+    messagesContainer.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Display system message
+function displaySystemMessage(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'system-message';
+    messageDiv.textContent = message;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Update online users list
+function updateUsersList(users) {
+    usersList.innerHTML = '';
+    users.forEach(user => {
+        const li = document.createElement('li');
+        li.textContent = user;
+        if (user === username) {
+            li.style.fontWeight = 'bold';
+            li.textContent += ' (You)';
+        }
+        usersList.appendChild(li);
+    });
+    
+    onlineCountSpan.textContent = `${users.length} online`;
+}
+
+// Socket event listeners
+socket.on('user-joined', (data) => {
+    displaySystemMessage(`${data.username} joined the chat`);
+    updateUsersList(data.users);
+});
+
+socket.on('user-left', (data) => {
+    displaySystemMessage(`${data.username} left the chat`);
+    updateUsersList(data.users);
+});
+
+socket.on('online-users', (users) => {
+    updateUsersList(users);
+});
+
+socket.on('new-message', (data) => {
+    const isOwn = data.username === username;
+    displayMessage(data, isOwn);
+});
+
+socket.on('connect', () => {
+    console.log('Connected to server');
+});
+
+socket.on('disconnect', () => {
+    displaySystemMessage('Disconnected from server');
+});
