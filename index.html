@@ -1,65 +1,301 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dental Instruments Database</title>
+    <title>PUBG Zone Guide - دليل منطقة اللعب</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="author-info">
-                <img src="profile.jpg" alt="Mahmoud Adil" class="profile-pic" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNEREREREQiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iNyIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNNSAzMkM1IDI2LjQ3NzIgOS40NzcxNSAyMiAxNSAyMkgyNUMzMC41MjI4IDIyIDM1IDI2LjQ3NzIgMzUgMzJWMzVINVYzMloiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+'">
-                <span class="author-name">Made by Mahmoud Adil</span>
-            </div>
-            <div class="titles">
-                <h1></h1>
-                <h2></h2>
-            </div>
+            <h1>🎮 دليل منطقة اللعب PUBG</h1>
+            <p class="subtitle">مراحل الزون من 1 إلى 8 مع المؤقتات</p>
         </header>
 
-        <!-- Subject Selection View -->
-        <div id="subjectView" class="view">
-            <nav class="subjects-nav">
-                <h3>ادوات العيادة المطلوبة</h3>
-                <div class="subjects-list" id="subjectsList">
-                    <!-- Subjects will be loaded here -->
-                </div>
-            </nav>
+        <div class="start-section">
+            <button id="startBtn" class="start-btn">ابدأ من إقلاع الطائرة</button>
+            <button id="resetBtn" class="reset-btn">إعادة تعيين</button>
         </div>
 
-        <!-- Groups and Instruments View -->
-        <div id="instrumentsView" class="view" style="display: none;">
-            <div class="navigation-header">
-                <button id="backToSubjects" class="back-button">← Back to Subjects</button>
-                <h3 id="selectedSubjectTitle"></h3>
-            </div>
-
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="searchInput">Search:</label>
-                    <input type="text" id="searchInput" placeholder="Search instruments...">
-                </div>
-            </div>
-
-            <div id="groupsContainer" class="groups-container">
-                <!-- Groups will be loaded here -->
+        <div class="flight-info">
+            <div class="info-box">
+                <span class="label">وقت الإقلاع:</span>
+                <span id="flightTime" class="time-display">02:00</span>
             </div>
         </div>
 
-        <!-- Image Modal -->
-        <div id="imageModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div class="image-container">
-                    <button class="nav-btn prev-btn" id="prevImage">❮</button>
-                    <img id="modalImage" src="" alt="">
-                    <button class="nav-btn next-btn" id="nextImage">❯</button>
+        <div class="zones-container">
+            <!-- Zone 1 -->
+            <div class="zone-card" id="zone1">
+                <div class="zone-header">
+                    <h3>المنطقة الأولى</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="1">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">1</span>
+                    </div>
                 </div>
-                <div class="image-counter" id="imageCounter"></div>
-                <div class="image-thumbnails" id="imageThumbnails"></div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone1-start">05:00</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone1-shrink">05:00</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone1-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">12:00</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="1">تخطي</button>
+            </div>
+
+            <!-- Zone 2 -->
+            <div class="zone-card" id="zone2">
+                <div class="zone-header">
+                    <h3>المنطقة الثانية</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="2">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">2</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone2-start">03:20</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone2-shrink">02:20</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone2-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">17:40</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="2">تخطي</button>
+            </div>
+
+            <!-- Zone 3 -->
+            <div class="zone-card" id="zone3">
+                <div class="zone-header">
+                    <h3>المنطقة الثالثة</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="3">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">3</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone3-start">02:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone3-shrink">01:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone3-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">21:40</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="3">تخطي</button>
+            </div>
+
+            <!-- Zone 4 -->
+            <div class="zone-card" id="zone4">
+                <div class="zone-header">
+                    <h3>المنطقة الرابعة</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="4">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">4</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone4-start">02:00</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone4-shrink">01:00</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone4-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">24:40</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="4">تخطي</button>
+            </div>
+
+            <!-- Zone 5 -->
+            <div class="zone-card" id="zone5">
+                <div class="zone-header">
+                    <h3>المنطقة الخامسة</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="5">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">5</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone5-start">02:00</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone5-shrink">00:40</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone5-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">27:20</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="5">تخطي</button>
+            </div>
+
+            <!-- Zone 6 -->
+            <div class="zone-card" id="zone6">
+                <div class="zone-header">
+                    <h3>المنطقة السادسة</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="6">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">6</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone6-start">01:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone6-shrink">00:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone6-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">29:20</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="6">تخطي</button>
+            </div>
+
+            <!-- Zone 7 -->
+            <div class="zone-card" id="zone7">
+                <div class="zone-header">
+                    <h3>المنطقة السابعة</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="7">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">7</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone7-start">01:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone7-shrink">00:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone7-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">31:20</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="7">تخطي</button>
+            </div>
+
+            <!-- Zone 8 -->
+            <div class="zone-card" id="zone8">
+                <div class="zone-header">
+                    <h3>المنطقة الثامنة</h3>
+                    <div class="zone-controls">
+                        <div class="speed-control" data-zone="8">
+                            <button class="speed-btn speed-down" data-action="down" title="إبطاء">-</button>
+                            <button class="speed-btn speed-reset" data-action="reset" title="عادي">1x</button>
+                            <button class="speed-btn speed-up" data-action="up" title="تسريع">+</button>
+                        </div>
+                        <span class="zone-number">8</span>
+                    </div>
+                </div>
+                <div class="zone-timers">
+                    <div class="timer-row">
+                        <span class="label">⏱️ وقت البداية:</span>
+                        <span class="time-display" id="zone8-start">01:00</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">🔄 وقت الانكماش:</span>
+                        <span class="time-display" id="zone8-shrink">00:30</span>
+                    </div>
+                    <div class="timer-row">
+                        <span class="label">⏳ الوقت المتبقي:</span>
+                        <span class="time-display countdown" id="zone8-countdown">--:--</span>
+                    </div>
+                </div>
+                <div class="zone-total">
+                    <span class="label">مجموع الوقت:</span>
+                    <span class="total-time">32:50</span>
+                </div>
+                <button class="zone-skip-btn" data-zone="8">تخطي</button>
             </div>
         </div>
     </div>
