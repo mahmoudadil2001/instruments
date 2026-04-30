@@ -1,312 +1,46 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مستعرض ملفات الباثولوجيا</title>
-    <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        body { background: #eef2f7; padding: 20px; min-height: 100vh; }
-        .app-container {
-            max-width: 1400px; margin: 0 auto; background: white;
-            border-radius: 28px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
-            overflow: hidden; display: flex; flex-direction: column;
-        }
-        .header { background: #1e3a5f; color: white; padding: 18px 28px; }
-        .header h1 { font-size: 1.6rem; }
-        .header p { margin: 8px 0 0; opacity: 0.85; font-size: 0.9rem; }
-        .main-layout { display: flex; min-height: 85vh; }
-
-        /* Sidebar */
-        .sidebar {
-            background: #f9fafc; width: 300px; min-width: 300px;
-            border-left: 1px solid #dee2e6; padding: 16px 10px;
-            overflow-y: auto; max-height: 85vh;
-        }
-        .sidebar-title { font-weight: 700; margin-bottom: 12px; color: #333; padding: 0 6px; }
-        .folder-tree { list-style: none; }
-        .folder-name {
-            font-weight: 700; color: #1e466e; background: #e9eef5;
-            padding: 10px 14px; border-radius: 16px; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; margin: 8px 0 4px;
-            transition: background 0.2s; user-select: none;
-        }
-        .folder-name:hover { background: #dfe6f0; }
-        .folder-arrow { margin-right: auto; transition: transform 0.2s; font-size: 0.8rem; }
-        .folder-name.open .folder-arrow { transform: rotate(90deg); }
-        .file-list { padding-right: 14px; display: none; }
-        .file-item {
-            display: flex; align-items: center; gap: 8px;
-            background: white; margin: 5px 0; padding: 7px 12px;
-            border-radius: 30px; border: 1px solid #e2e6ea;
-            cursor: pointer; transition: all 0.15s;
-        }
-        .file-item:hover { background: #eef2ff; border-color: #a0b8d4; }
-        .file-item.active { background: #1e3a5f; border-color: #1e3a5f; }
-        .file-item.active .file-name { color: white; }
-        .file-name { font-size: 0.82rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .dl-btn {
-            background: none; border: none; cursor: pointer; font-size: 1rem;
-            padding: 2px 6px; border-radius: 20px; flex-shrink: 0; opacity: 0.6;
-        }
-        .dl-btn:hover { background: rgba(0,0,0,0.08); opacity: 1; }
-        .file-item.active .dl-btn { opacity: 0.8; }
-
-        /* Content */
-        .content-area { flex: 1; background: #f1f3f5; padding: 16px; display: flex; flex-direction: column; overflow: hidden; }
-        .toolbar {
-            background: white; border-radius: 40px; padding: 8px 20px; margin-bottom: 14px;
-            display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0;
-        }
-        .file-label { font-weight: 600; color: #1f3a5f; font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .btn-dl {
-            background: #2c6e2c; color: white; border: none; padding: 7px 20px;
-            border-radius: 40px; cursor: pointer; font-weight: bold; white-space: nowrap; display: none;
-        }
-
-        /* PDF Viewer */
-        #pdfWrapper {
-            flex: 1; background: #343a40; border-radius: 16px;
-            display: flex; flex-direction: column; overflow: hidden;
-        }
-        .empty-state {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; color: #aaa;
-        }
-        .empty-state .icon { font-size: 3.5rem; margin-bottom: 16px; }
-        
-        #pdfControls {
-            background: #1e3a5f; padding: 10px 20px;
-            border-radius: 16px 16px 0 0; flex-shrink: 0;
-            display: none; justify-content: center;
-        }
-        #pageInfo { color: white; font-size: 0.9rem; font-weight: 600; }
-
-        #canvasContainer {
-            flex: 1; overflow-y: auto; overflow-x: hidden;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 15px; gap: 15px;
-        }
-        #canvasContainer canvas {
-            max-width: 95%; border-radius: 4px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        }
-
-        #loadingMsg {
-            color: white; text-align: center; padding: 40px; font-size: 1rem; display: none;
-        }
-
-        footer {
-            font-size: 0.75rem; text-align: center; padding: 12px;
-            background: #f8f9fa; border-top: 1px solid #dee2e6; color: #888;
-        }
-
-        @media (max-width: 700px) {
-            .main-layout { flex-direction: column; }
-            .sidebar { width: 100%; min-width: unset; max-height: 35vh; }
-        }
-    </style>
-</head>
-<body>
-<div class="app-container">
-    <div class="header">
-        <h1>📚</h1>
-        <p>عرض وتحميل ملفات PDF مباشرة</p>
-    </div>
-    <div class="main-layout">
-        <div class="sidebar">
-            <div class="sidebar-title">📁 المجلدات المتاحة</div>
-            <ul class="folder-tree" id="treeContainer"></ul>
-        </div>
-        <div class="content-area">
-            <div class="toolbar">
-                <div class="file-label" id="fileLabel">✨ اختر ملفاً من القائمة</div>
-                <button class="btn-dl" id="btnDl">📥 تحميل الملف</button>
-            </div>
-            <div id="pdfWrapper">
-                <div class="empty-state" id="emptyState">
-                    <div class="icon">📄</div>
-                    <p>اختر ملفاً من القائمة على اليمين</p>
-                </div>
-                <div id="pdfControls">
-                    <span id="pageInfo">عدد الصفحات: -</span>
-                </div>
-                <div id="loadingMsg">⏳ جاري فتح الملف، يرجى الانتظار...</div>
-                <div id="canvasContainer"></div>
-            </div>
-        </div>
-    </div>
-    <footer>📂 تأكد من مطابقة أسماء المجلدات والملفات تماماً لما هو موجود في السيرفر</footer>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    const BASE_PATH = 'patho/';
-    let activeItem = null;
-    let pdfDoc = null;
-    let scale = 1.4; // حجم افتراضي مريح للعين
-
-    const fileTree = {
-        "Chadeer": ["(1) biopsy.pdf", "(2) dental caries.pdf", "(3) pulpitis.pdf", "(4) periapical 2.pdf", "(5) Bone infection (N).pdf", "(7) Giant cell lesion (N).pdf", "(8) metabolic and genetic bone diseases (N).pdf", "(9) benign bone.pdf", "(10) Bone tumor.pdf", "(11) odontogenic cyst (N).pdf", "(12) odontogenic tumor.pdf", "(13) developmental teeth (N).pdf", "(14) developmentaldefects of soft and bone.pdf", "(16) oral ulcerative lesions.pdf"],
-        "Dr noor": ["(1) Biopsy.pdf", "(2) Caries.pdf", "(4) periapical disorder.pdf", "(5) Bone infection NOOR.pdf", "(6) fibrous dysplasia (N).pdf", "(7) Giant cell lesion (N).pdf", "(8) metabolic and genetic bone diseases (N).pdf", "(9) benign bone.pdf", "(10) Bone tumor.pdf", "(11) odontogenic cyst (N).pdf", "(12) odontogenic tumor.pdf", "(13) developmental teeth (N).pdf", "(14) developmental soft and bone.pdf", "(15) terminology.pdf", "(16) primary oral ulcerative lesions.pdf", "(17) ulcerative and vesiculobullous lesions.pdf", "(18) Epithelial Pathology.pdf"],
-        "Mohamed": ["(1) Fibroosseous lesions.pdf", "(2) odontogenic cyst.pdf", "(3) periodontitis.pdf", "(4) Pulpitis.pdf", "(5) cysts of jaw.pdf", "(6) benign bone tumor.pdf", "(7) oral mucosal lesions.pdf", "(8) immune mediated disorders part 1.pdf", "(9)  immune mediated disorders part 2.pdf", "(10) giant cell lesions.pdf", "(11) dental caries.pdf", "(12) Inflammatory diseases of bone.pdf", "(13) malignant bone tumors.pdf", "(14) odontogenic tumors.pdf", "(15) biopsy.pdf"]
-    };
-
-    function getNum(name) {
-        const m = name.match(/^\((\d+)\)/);
-        return m ? parseInt(m[1]) : 999;
-    }
-
-    for (const f in fileTree) fileTree[f].sort((a, b) => getNum(a) - getNum(b));
-
-    function buildTree() {
-        const ul = document.getElementById('treeContainer');
-        for (const [folder, files] of Object.entries(fileTree)) {
-            const li = document.createElement('li');
-            const folderDiv = document.createElement('div');
-            folderDiv.className = 'folder-name';
-            folderDiv.innerHTML = `<span>📂</span><span>${folder}</span><span style="font-size:0.75rem;opacity:0.6;">(${files.length})</span><span class="folder-arrow">▶</span>`;
-
-            const fileListDiv = document.createElement('div');
-            fileListDiv.className = 'file-list';
-
-            folderDiv.onclick = () => {
-                const open = fileListDiv.style.display === 'block';
-                fileListDiv.style.display = open ? 'none' : 'block';
-                folderDiv.classList.toggle('open', !open);
-            };
-
-            files.forEach(file => {
-                const row = document.createElement('div');
-                row.className = 'file-item';
-                const display = file.replace(/\.pdf$/i, '');
-                const url = `${BASE_PATH}${folder}/${encodeURIComponent(file)}`;
-
-                row.innerHTML = `<span class="file-name" title="${display}">${display}</span><button class="dl-btn">⬇️</button>`;
-
-                row.onclick = () => {
-                    if (activeItem) activeItem.classList.remove('active');
-                    row.classList.add('active');
-                    activeItem = row;
-                    openPDF(url, display, folder);
-                };
-                fileListDiv.appendChild(row);
-            });
-            li.appendChild(folderDiv);
-            li.appendChild(fileListDiv);
-            ul.appendChild(li);
-        }
-    }
-
-    async function openPDF(url, displayName, folderName) {
-        document.getElementById('emptyState').style.display = 'none';
-        document.getElementById('pdfControls').style.display = 'flex';
-        document.getElementById('loadingMsg').style.display = 'block';
-        document.getElementById('canvasContainer').innerHTML = '';
-        document.getElementById('fileLabel').innerHTML = `📄 ${displayName}`;
-
-        const btnDl = document.getElementById('btnDl');
-        btnDl.style.display = 'flex';
-        btnDl.onclick = () => { window.open(url, '_blank'); };
-
-        try {
-            const loadingTask = pdfjsLib.getDocument(url);
-            pdfDoc = await loadingTask.promise;
-            document.getElementById('pageInfo').textContent = `إجمالي الصفحات: ${pdfDoc.numPages}`;
-            document.getElementById('loadingMsg').style.display = 'none';
-            
-            for (let i = 1; i <= pdfDoc.numPages; i++) {
-                const page = await pdfDoc.getPage(i);
-                const viewport = page.getViewport({ scale });
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                document.getElementById('canvasContainer').appendChild(canvas);
-                await page.render({ canvasContext: ctx, viewport }).promise;
-            }
-        } catch (err) {
-            document.getElementById('loadingMsg').innerHTML = '❌ فشل عرض الملف. <br> قد يكون السبب قيود أمان السيرفر (CORS) أو المسار غير صحيح.';
-            console.error(err);
-        }
-    }
-
-    buildTree();
-</script>
-</body>
-</html>        .empty-state {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #aaa; width: 100%;
-        }
-        .empty-state .icon { font-size: 3.5rem; margin-bottom: 16px; }
-        
-        #pdfFrame {
-            width: 100%; height: 100%; border: none; display: none;
-        }
-
-        footer {
-            font-size: 0.75rem; text-align: center; padding: 12px;
-            background: #f8f9fa; border-top: 1px solid #dee2e6; color: #888;
-        }
-
-        @media (max-width: 700px) {
-            .main-layout { flex-direction: column; }
-            .sidebar { width: 100%; min-width: unset; max-height: 35vh; }
-        }
-    </style>
-</head>
-<body>
-<div class="app-container">
-    <div class="header">
-        <h1>📚 أرشيف الباثولوجيا التفاعلي</h1>
-        <p>عرض وتحميل ملفات PDF مباشرة</p>
-    </div>
-    <div class="main-layout">
-        <div class="sidebar">
-            <div class="sidebar-title">📁 المجلدات المتاحة</div>
-            <ul class="folder-tree" id="treeContainer"></ul>
-        </div>
-        <div class="content-area">
-            <div class="toolbar">
-                <div class="file-label" id="fileLabel">✨ اختر ملفاً من القائمة</div>
-                <button class="btn-dl" id="btnDl">📥 تحميل الملف</button>
-            </div>
-            <div id="pdfWrapper">
-                <div class="empty-state" id="emptyState">
-                    <div class="icon">📄</div>
-                    <p>اختر ملفاً من القائمة على اليمين لفتحه</p>
-                </div>
-                <iframe id="pdfFrame" src=""></iframe>
-            </div>
-        </div>
-    </div>
-    <footer>📂 تأكد من مطابقة أسماء المجلدات والملفات تماماً لما هو موجود في GitHub</footer>
-</div>
-
-<script>
-    // استخدام مسار نسبي لضمان العمل على GitHub Pages
+    // المسار النسبي للمجلد
     const BASE_PATH = 'patho/'; 
     let activeItem = null;
 
-    // الأسماء محدثة لتطابق الشجرة التي أرسلتها
+    // القائمة المحدثة بالأسماء الجديدة (بدون أرقام)
     const fileTree = {
-        "Chadeer": ["(1) biopsy.pdf", "(2) dental caries.pdf", "(3) pulpitis.pdf", "(4) periapical 2.pdf", "(5) Bone infection (N).pdf", "(7) Giant cell lesion (N).pdf", "(8) metabolic and genetic bone diseases (N).pdf", "(9) benign bone.pdf", "(10) Bone tumor.pdf", "(11) odontogenic cyst (N).pdf", "(12) odontogenic tumor.pdf", "(13) developmental teeth (N).pdf", "(14) developmentaldefects of soft and bone.pdf", "(16) oral ulcerative lesions.pdf"],
-        "Dr noor": ["(1) Biopsy.pdf", "(2) Caries.pdf", "(4) periapical disorder.pdf", "(5) Bone infection NOOR.pdf", "(6) fibrous dysplasia (N).pdf", "(7) Giant cell lesion (N).pdf", "(8) metabolic and genetic bone diseases (N).pdf", "(9) benign bone.pdf", "(10) Bone tumor.pdf", "(11) odontogenic cyst (N).pdf", "(12) odontogenic tumor.pdf", "(13) developmental teeth (N).pdf", "(14) developmental soft and bone.pdf", "(15) terminology.pdf", "(16) primary oral ulcerative lesions.pdf", "(17) ulcerative and vesiculobullous lesions.pdf", "(18) Epithelial Pathology.pdf"],
-        "Mohamed": ["(1) Fibroosseous lesions.pdf", "(2) odontogenic cyst.pdf", "(3) periodontitis.pdf", "(4) Pulpitis.pdf", "(5) cysts of jaw.pdf", "(6) benign bone tumor.pdf", "(7) oral mucosal lesions.pdf", "(8) immune mediated disorders part 1.pdf", "(9)  immune mediated disorders part 2.pdf", "(10) giant cell lesions.pdf", "(11) dental caries.pdf", "(12) Inflammatory diseases of bone.pdf", "(13) malignant bone tumors.pdf", "(14) odontogenic tumors.pdf", "(15) biopsy.pdf"]
+        "Chadeer": [
+            "biopsy.pdf", "dental caries.pdf", "pulpitis.pdf", "periapical 2.pdf", 
+            "Bone infection (N).pdf", "Giant cell lesion (N).pdf", 
+            "metabolic and genetic bone diseases (N).pdf", "benign bone.pdf", 
+            "Bone tumor.pdf", "odontogenic cyst (N).pdf", "odontogenic tumor.pdf", 
+            "developmental teeth (N).pdf", "developmentaldefects of soft and bone.pdf", 
+            "oral ulcerative lesions.pdf"
+        ],
+        "Dr noor": [
+            "Biopsy.pdf", "Caries.pdf", "periapical disorder.pdf", "Bone infection NOOR.pdf", 
+            "fibrous dysplasia (N).pdf", "Giant cell lesion (N).pdf", 
+            "metabolic and genetic bone diseases (N).pdf", "benign bone.pdf", 
+            "Bone tumor.pdf", "odontogenic cyst (N).pdf", "odontogenic tumor.pdf", 
+            "developmental teeth (N).pdf", "developmental soft and bone.pdf", 
+            "terminology.pdf", "primary oral ulcerative lesions.pdf", 
+            "ulcerative and vesiculobullous lesions.pdf", "Epithelial Pathology.pdf"
+        ],
+        "Mohamed": [
+            "Fibroosseous lesions.pdf", "odontogenic cyst.pdf", "periodontitis.pdf", 
+            "Pulpitis.pdf", "cysts of jaw.pdf", "benign bone tumor.pdf", 
+            "oral mucosal lesions.pdf", "immune mediated disorders part 1.pdf", 
+            "immune mediated disorders part 2.pdf", "giant cell lesions.pdf", 
+            "dental caries.pdf", "Inflammatory diseases of bone.pdf", 
+            "malignant bone tumors.pdf", "odontogenic tumors.pdf", "biopsy.pdf"
+        ]
     };
 
-    function getNum(name) {
-        const m = name.match(/^\((\d+)\)/);
-        return m ? parseInt(m[1]) : 999;
+    // ترتيب الملفات أبجدياً بما أن الترقيم حُذف
+    for (const f in fileTree) {
+        fileTree[f].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     }
-
-    // ترتيب الملفات رقمياً
-    for (const f in fileTree) fileTree[f].sort((a, b) => getNum(a) - getNum(b));
 
     function buildTree() {
         const ul = document.getElementById('treeContainer');
+        ul.innerHTML = ''; // تنظيف القائمة قبل البناء
+
         for (const [folder, files] of Object.entries(fileTree)) {
             const li = document.createElement('li');
             
@@ -326,22 +60,20 @@
             files.forEach(file => {
                 const row = document.createElement('div');
                 row.className = 'file-item';
-                const display = file.replace(/\.pdf$/i, '');
+                const display = file.replace(/\.pdf$/i, ''); // إزالة صيغة الملف عند العرض فقط
                 
-                // تشفير الرابط للتعامل مع المسافات والأقواس
+                // تشفير الرابط للتعامل مع المسافات
                 const url = `${BASE_PATH}${folder}/${encodeURIComponent(file)}`;
 
                 row.innerHTML = `<span class="file-name" title="${display}">${display}</span><button class="dl-btn">⬇️</button>`;
 
-                row.onclick = (e) => {
-                    // منع التحميل عند الضغط على الصف بالكامل وفتح المعاينة بدلاً من ذلك
+                row.onclick = () => {
                     if (activeItem) activeItem.classList.remove('active');
                     row.classList.add('active');
                     activeItem = row;
                     openPDF(url, display);
                 };
 
-                // زر التحميل المباشر
                 row.querySelector('.dl-btn').onclick = (e) => {
                     e.stopPropagation();
                     window.open(url, '_blank');
@@ -364,7 +96,7 @@
 
         empty.style.display = 'none';
         frame.style.display = 'block';
-        frame.src = url; // فتح الملف مباشرة داخل الـ iframe
+        frame.src = url; 
         
         label.innerHTML = `📄 ${displayName}`;
         btnDl.style.display = 'flex';
@@ -373,5 +105,3 @@
 
     buildTree();
 </script>
-</body>
-</html>
