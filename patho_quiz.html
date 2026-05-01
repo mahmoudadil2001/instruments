@@ -1405,10 +1405,15 @@
 
       let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
       questions.forEach((q, index) => {
-        html += '<div class="question-page">';
+        // Start a new page every 2 questions
+        if (index % 2 === 0) {
+          html += '<div class="question-page">';
+        }
+
+        html += '<div class="question-container" style="margin-bottom: 30px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px;">';
         html += '<div class="question-title"><span class="badge">Question ' + (index + 1) + '</span> <span>What is the diagnosis?</span></div>';
         let imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
-        html += '<img src="' + imgSrc + '" class="question-img" />';
+        html += '<img src="' + imgSrc + '" class="question-img" style="max-height: 400px;" />';
         html += '<div class="options-grid">';
         q.options.forEach((opt, optIndex) => {
           let isCorrect = (optIndex === q.correct);
@@ -1416,8 +1421,13 @@
           html += '<div class="' + optClass + '">' + opt + '</div>';
         });
         html += '</div>';
-        html += '<div class="footer-page">Page ' + (index + 1) + ' of ' + questions.length + ' - Patho Final Quiz</div>';
         html += '</div>';
+
+        // Close page after 2 questions OR if it's the last question
+        if (index % 2 === 1 || index === questions.length - 1) {
+          html += '<div class="footer-page">Patho Final Quiz - Questions ' + (Math.max(1, index)) + '-' + (index + 1) + '</div>';
+          html += '</div>';
+        }
       });
 
       html += '</div>';
@@ -1432,6 +1442,13 @@
       };
 
       try {
+        // Wait for all images in the printContent to load
+        const images = printContent.querySelectorAll('img');
+        await Promise.all(Array.from(images).map(img => {
+          if (img.complete) return Promise.resolve();
+          return new Promise(resolve => { img.onload = img.onerror = resolve; });
+        }));
+
         const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
         const fileName = `Patho_Quiz_${timestamp}.pdf`;
         
@@ -1442,7 +1459,6 @@
         
         const file = new File([pdfBlob], fileName, { type: "application/pdf" });
         
-        // Remove old listener if any and add a new one for manual share
         btn.onclick = async (e) => {
           e.stopPropagation();
           if (navigator.share) {
@@ -1453,22 +1469,18 @@
                 text: 'Solved Questions'
               });
             } catch (err) {
-              // Fallback to manual download if share fails
               const link = document.createElement('a');
               link.href = URL.createObjectURL(pdfBlob);
               link.download = fileName;
               link.click();
-              alert("تم تحميل الملف! يرجى إرساله يدوياً.");
             }
           } else {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
             link.download = fileName;
             link.click();
-            alert("المتصفح لا يدعم المشاركة المباشرة، تم تحميل الملف لجهازك.");
           }
           
-          // Restore original button after sharing
           setTimeout(() => {
             btn.innerHTML = originalText;
             btn.onclick = downloadPDF;
