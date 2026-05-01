@@ -1404,20 +1404,17 @@
 
       const btn = document.querySelector('#quiz-screen .btn');
       const originalText = btn.innerHTML;
-      btn.innerHTML = '⌛ جاري تحضير الأسئلة...';
-
+      btn.innerHTML = '⌛ جاري تحضير الصور...';
+      
       const getBase64Image = (imgUrl) => {
         return new Promise((resolve) => {
           const img = new Image();
           img.crossOrigin = 'Anonymous';
           img.onload = () => {
-            try {
-              const canvas = document.createElement('canvas');
-              canvas.width = img.naturalWidth || img.width;
-              canvas.height = img.naturalHeight || img.height;
-              canvas.getContext('2d').drawImage(img, 0, 0);
-              resolve(canvas.toDataURL('image/jpeg', 0.92));
-            } catch(e) { resolve(null); }
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width; canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/jpeg'));
           };
           img.onerror = () => resolve(null);
           img.src = imgUrl;
@@ -1427,262 +1424,73 @@
       try {
         let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
         const prepared = [];
-
         for (let i = 0; i < questions.length; i++) {
-          btn.innerHTML = `⌛ جاري معالجة الأسئلة (${i + 1}/${questions.length})...`;
+          btn.innerHTML = `⌛ جاري معالجة الصور (${Math.round((i/questions.length)*100)}%)...`;
           const q = questions[i];
-          const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:')
-            ? q.img
-            : basePath + '/named_images/' + encodeURIComponent(q.img);
+          const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
           const b64 = await getBase64Image(imgSrc);
           prepared.push({ ...q, b64 });
         }
 
         btn.innerHTML = '⌛ جاري إنشاء الـ PDF...';
-        const printContent = document.createElement('div');
-        printContent.style.cssText = 'position:fixed;top:0;left:0;width:794px;z-index:-9999;opacity:0;background:#fff;';
+        let printContent = document.createElement('div');
+        printContent.style.cssText = 'position:fixed; top:0; left:0; width:800px; z-index:-9999; opacity:0; background:#f7fafc;';
         document.body.appendChild(printContent);
-
-        const labLabel = document.getElementById('selected-lab-text') 
-          ? document.getElementById('selected-lab-text').textContent 
-          : 'All Labs';
-
-        const optionLetters = ['A', 'B', 'C', 'D'];
-
+        
         let html = `
-        <style>
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Segoe UI', Arial, sans-serif; }
-          .pdf-wrap { background: #f0f4f8; width: 794px; }
-
-          /* ── Cover Page ── */
-          .cover-page {
-            width: 794px; height: 1122px;
-            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            page-break-after: always; position: relative; overflow: hidden;
-          }
-          .cover-deco {
-            position: absolute; border-radius: 50%;
-            background: rgba(77,217,247,0.06);
-          }
-          .cover-deco.d1 { width:500px;height:500px;top:-100px;right:-100px; }
-          .cover-deco.d2 { width:350px;height:350px;bottom:-80px;left:-80px; }
-          .cover-deco.d3 { width:200px;height:200px;bottom:200px;right:50px;background:rgba(255,255,255,0.04); }
-          .cover-icon { font-size: 5rem; margin-bottom: 24px; filter: drop-shadow(0 0 20px rgba(77,217,247,0.5)); }
-          .cover-title { color: #fff; font-size: 2.8rem; font-weight: 800; letter-spacing: 1px; text-align:center; line-height:1.2; margin-bottom:12px; }
-          .cover-sub { color: #4dd9f7; font-size: 1.15rem; font-weight: 600; margin-bottom: 40px; text-align:center; }
-          .cover-divider { width: 80px; height: 4px; background: linear-gradient(90deg,#4dd9f7,#00b4d8); border-radius:2px; margin-bottom:40px; }
-          .cover-info-box {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(77,217,247,0.3);
-            border-radius: 16px; padding: 24px 40px; text-align:center; backdrop-filter:blur(10px);
-          }
-          .cover-info-box p { color: #c8d8e8; font-size: 1rem; margin: 6px 0; }
-          .cover-info-box strong { color: #4dd9f7; }
-          .cover-footer {
-            position: absolute; bottom: 30px;
-            display: flex; justify-content: space-between; width: 100%; padding: 0 50px;
-            color: rgba(255,255,255,0.35); font-size: 0.8rem;
-          }
-
-          /* ── Question Pages ── */
-          .q-page {
-            width: 794px; min-height: 1122px;
-            background: #fff; padding: 0;
-            page-break-after: always;
-            display: flex; flex-direction: column;
-          }
-          .page-header {
-            background: linear-gradient(90deg, #1a1a2e, #0f3460);
-            color: white; padding: 14px 36px;
-            display: flex; justify-content: space-between; align-items: center;
-          }
-          .page-header .brand { font-weight: 700; font-size: 0.85rem; color: #4dd9f7; letter-spacing:1px; }
-          .page-header .page-info { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
-
-          .page-body { padding: 28px 36px; flex: 1; display: flex; flex-direction: column; gap: 0; }
-
-          .q-block {
-            flex: 1; border: 1.5px solid #e2e8f0; border-radius: 16px;
-            overflow: hidden; background: #fafbfc;
-            display: flex; flex-direction: column;
-            margin-bottom: 20px;
-          }
-          .q-block:last-child { margin-bottom: 0; }
-
-          .q-header {
-            background: linear-gradient(90deg, #ebf8ff, #e6fffa);
-            padding: 14px 20px;
-            display: flex; align-items: center; gap: 12px;
-            border-bottom: 1.5px solid #bee3f8;
-          }
-          .q-num-badge {
-            background: linear-gradient(135deg, #3182ce, #00b4d8);
-            color: white; font-weight: 800; font-size: 0.9rem;
-            padding: 5px 14px; border-radius: 20px;
-            white-space: nowrap; flex-shrink: 0;
-          }
-          .q-text { font-weight: 700; font-size: 1.05rem; color: #2d3748; }
-
-          .q-img-area {
-            background: #1a202c;
-            display: flex; align-items: center; justify-content: center;
-            min-height: 240px; max-height: 300px; overflow: hidden;
-            position: relative;
-          }
-          .q-img-area img {
-            max-width: 100%; max-height: 300px;
-            object-fit: contain; display: block;
-          }
-          .q-img-placeholder {
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            color: #718096; font-size: 0.9rem; gap: 8px;
-            padding: 30px;
-          }
-          .q-img-placeholder .img-name {
-            font-family: monospace; font-size: 0.75rem;
-            background: rgba(255,255,255,0.1); color: #a0aec0;
-            padding: 4px 10px; border-radius: 6px; word-break: break-all;
-            text-align: center; max-width: 300px;
-          }
-
-          .q-options { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-          .q-opt {
-            padding: 11px 16px; border-radius: 10px;
-            border: 1.5px solid #e2e8f0; background: #f7fafc;
-            font-size: 0.9rem; color: #4a5568;
-            display: flex; align-items: flex-start; gap: 10px;
-          }
-          .q-opt.is-correct {
-            background: #f0fff4; border-color: #48bb78; color: #22543d; font-weight: 700;
-          }
-          .opt-letter {
-            width: 24px; height: 24px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
-            background: #e2e8f0; color: #718096;
-          }
-          .is-correct .opt-letter {
-            background: #48bb78; color: #fff;
-          }
-          .correct-tag {
-            margin-left: auto; font-size: 0.75rem; font-weight: 700;
-            background: #c6f6d5; color: #276749; padding: 2px 8px; border-radius: 10px;
-            white-space: nowrap; flex-shrink: 0;
-          }
-
-          .page-footer {
-            padding: 10px 36px 14px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-top: 1px solid #e2e8f0;
-          }
-          .page-footer span { font-size: 0.75rem; color: #a0aec0; }
-        </style>
-        <div class="pdf-wrap">
-
-          <!-- Cover Page -->
-          <div class="cover-page">
-            <div class="cover-deco d1"></div>
-            <div class="cover-deco d2"></div>
-            <div class="cover-deco d3"></div>
-            <div class="cover-icon">🦷</div>
-            <div class="cover-title">Patho Final Quiz</div>
-            <div class="cover-sub">Image-Based MCQ Questions with Answers</div>
-            <div class="cover-divider"></div>
-            <div class="cover-info-box">
-              <p>📚 Lab: <strong>${labLabel}</strong></p>
-              <p>❓ Total Questions: <strong>${questions.length}</strong></p>
-              <p>📋 Format: <strong>2 Questions per Page · Answers Included</strong></p>
-            </div>
-            <div class="cover-footer">
-              <span>dentisitlogy.com</span>
-              <span>Generated ${new Date().toLocaleDateString('en-GB')}</span>
-              <span>t.me/dentisitlogy</span>
-            </div>
-          </div>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+            .pdf-body { font-family: 'Inter', sans-serif; color: #1a202c; line-height: 1.5; background: #f7fafc; width: 800px; }
+            .branding-header { display: flex; justify-content: space-between; padding: 10px 40px; background: #2d3748; color: white; font-weight: bold; font-size: 0.9rem; }
+            .header-info { text-align: center; margin: 20px; padding: 20px; background: white; border-radius: 12px; border-top: 5px solid #3182ce; }
+            .header-info h1 { margin: 0; font-size: 1.8rem; }
+            .question-page { page-break-after: always; display: flex; flex-direction: column; background: white; padding: 40px; min-height: 1000px; }
+            .question-container { margin-bottom: 30px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+            .question-title { font-weight: 700; margin-bottom: 20px; font-size: 1.4rem; color: #2d3748; display: flex; align-items: flex-start; gap: 15px; }
+            .question-title .badge { background: #3182ce; color: white; padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; }
+            .question-img { width: 100%; max-height: 400px; object-fit: contain; margin: 15px auto; display: block; border-radius: 12px; border: 6px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .option { padding: 15px; background: #f7fafc; border-radius: 10px; border: 2px solid #e2e8f0; font-size: 1rem; color: #4a5568; }
+            .correct-option { background: #f0fff4; border-color: #48bb78; color: #22543d; font-weight: 700; position: relative; }
+            .footer-page { text-align: center; margin-top: auto; color: #a0aec0; font-size: 0.8rem; padding-top: 20px; }
+          </style>
+          <div class="pdf-body">
+            <div class="branding-header"><span>dentisitlogy.com</span><span>t.me/dentisitlogy</span></div>
+            <div class="header-info"><h1>🦷 Patho Final Quiz</h1><p>Lab: ${document.getElementById('selected-lab-text').textContent} | Total: ${questions.length} Questions</p></div>
         `;
 
-        // Questions: 2 per page
-        for (let i = 0; i < prepared.length; i += 2) {
-          const pageNum = Math.floor(i / 2) + 1;
-          const totalPages = Math.ceil(prepared.length / 2);
-          const q1 = prepared[i];
-          const q2 = (i + 1 < prepared.length) ? prepared[i + 1] : null;
-
-          html += `<div class="q-page">
-            <div class="page-header">
-              <span class="brand">🦷 PATHO FINAL QUIZ</span>
-              <span class="page-info">Page ${pageNum} of ${totalPages}</span>
-            </div>
-            <div class="page-body">`;
-
-          const renderQ = (q, idx) => {
-            let imgPart = '';
-            if (q.b64) {
-              imgPart = `<div class="q-img-area"><img src="${q.b64}" /></div>`;
-            } else {
-              const shortName = q.img ? q.img.replace(/\.[^/.]+$/, '') : 'Image not available';
-              imgPart = `<div class="q-img-area"><div class="q-img-placeholder">
-                <span style="font-size:2.5rem">🔬</span>
-                <span>${shortName}</span>
-                <span class="img-name">${q.img || ''}</span>
-              </div></div>`;
-            }
-            let optionsHtml = '<div class="q-options">';
-            q.options.forEach((opt, oi) => {
-              const isC = (oi === q.correct);
-              optionsHtml += `<div class="q-opt${isC ? ' is-correct' : ''}">
-                <span class="opt-letter">${optionLetters[oi]}</span>
-                <span style="flex:1">${opt}</span>
-                ${isC ? '<span class="correct-tag">✓ Answer</span>' : ''}
-              </div>`;
-            });
-            optionsHtml += '</div>';
-            return `<div class="q-block">
-              <div class="q-header">
-                <span class="q-num-badge">Q${idx + 1}</span>
-                <span class="q-text">What is the most likely diagnosis?</span>
-              </div>
-              ${imgPart}
-              ${optionsHtml}
-            </div>`;
-          };
-
-          html += renderQ(q1, i);
-          if (q2) html += renderQ(q2, i + 1);
-
-          html += `</div>
-            <div class="page-footer">
-              <span>dentisitlogy.com &nbsp;|&nbsp; t.me/dentisitlogy</span>
-              <span>Questions ${i + 1}–${Math.min(i + 2, prepared.length)} of ${prepared.length}</span>
-            </div>
-          </div>`;
-        }
+        prepared.forEach((q, index) => {
+          if (index % 2 === 0) html += '<div class="question-page">';
+          html += '<div class="question-container">';
+          html += '<div class="question-title"><span class="badge">Q' + (index + 1) + '</span> <span>What is the diagnosis?</span></div>';
+          if (q.b64) html += '<img src="' + q.b64 + '" class="question-img" />';
+          html += '<div class="options-grid">';
+          q.options.forEach((opt, optIndex) => {
+            let optClass = (optIndex === q.correct) ? 'option correct-option' : 'option';
+            html += '<div class="' + optClass + '">' + opt + (optIndex === q.correct ? ' ✓' : '') + '</div>';
+          });
+          html += '</div></div>';
+          if (index % 2 === 1 || index === prepared.length - 1) {
+            html += '<div class="footer-page">Patho Final Quiz - Questions ' + (index + 1) + '</div></div>';
+          }
+        });
 
         html += '</div>';
         printContent.innerHTML = html;
 
         const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
         const fileName = `Patho_Quiz_${timestamp}.pdf`;
-        const opt = {
-          margin: 0,
-          filename: fileName,
-          image: { type: 'jpeg', quality: 0.95 },
-          html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' },
-          jsPDF: { unit: 'px', format: [794, 1122], orientation: 'portrait', hotfixes: ['px_scaling'] }
-        };
+        const opt = { margin: 0, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
 
         const pdfBlob = await html2pdf().set(opt).from(printContent).output('blob');
         document.body.removeChild(printContent);
-
-        btn.innerHTML = '📤 اضغط هنا لتحميل الملف';
-        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
+        
+        btn.innerHTML = '📤 اضغط هنا لإرسال الملف';
+        const file = new File([pdfBlob], fileName, { type: "application/pdf" });
+        
         btn.onclick = async (e) => {
           e.stopPropagation();
-          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          if (navigator.share) {
             try { await navigator.share({ files: [file], title: 'Patho Quiz', text: 'Solved Questions' }); }
             catch (err) { const link = document.createElement('a'); link.href = URL.createObjectURL(pdfBlob); link.download = fileName; link.click(); }
           } else {
@@ -1690,12 +1498,7 @@
           }
           setTimeout(() => { btn.innerHTML = originalText; btn.onclick = downloadPDF; }, 3000);
         };
-
-      } catch (err) {
-        console.error(err);
-        alert('خطأ في إنشاء الـ PDF: ' + err.message);
-        btn.innerHTML = originalText;
-      }
+      } catch (err) { console.error(err); alert("خطأ في التحميل."); btn.innerHTML = originalText; }
     }
 
     const terminalSentences = [
