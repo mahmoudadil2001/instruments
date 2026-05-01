@@ -1440,8 +1440,8 @@
         btn.innerHTML = '✅ تم التحميل!';
         
         setTimeout(() => {
-          if(confirm("تم تحميل الـ PDF بنجاح! هل تريد الذهاب إلى تلجرام (الرسائل المحفوظة) لإرسال الملف؟")) {
-            window.location.href = "tg://resolve?domain=SavedMessages";
+          if(confirm("تم تحميل الـ PDF بنجاح! هل تريد الذهاب إلى تلجرام لإرسال الملف؟ (اختر 'Saved Messages' أو 'الرسائل المحفوظة' من القائمة)")) {
+            window.location.href = "https://t.me/share/url?url=https://dentisitlogy.com&text=Patho%20Quiz%20PDF%20Solved";
           }
           btn.innerHTML = originalText;
           btn.disabled = false;
