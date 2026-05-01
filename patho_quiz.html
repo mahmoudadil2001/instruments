@@ -1367,131 +1367,101 @@
 
       const btn = document.querySelector('#quiz-screen .btn');
       const originalText = btn.innerHTML;
-      btn.innerHTML = '⌛ جاري تحضير الملف...';
+      btn.innerHTML = '⌛ جاري تحضير الصور...';
       
-      let printContent = document.createElement('div');
-      printContent.style.position = 'absolute';
-      printContent.style.left = '-9999px';
-      printContent.style.width = '800px'; 
-      document.body.appendChild(printContent);
-      
-      let html = `
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-          .pdf-body { font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif; color: #1a202c; line-height: 1.5; background: #f7fafc; }
-          .branding-header { display: flex; justify-content: space-between; padding: 10px 40px; background: #2d3748; color: white; font-weight: bold; font-size: 0.9rem; }
-          .header-info { text-align: center; margin: 20px; padding: 20px; background: white; border-radius: 12px; border-top: 5px solid #3182ce; }
-          .header-info h1 { margin: 0; font-size: 1.8rem; color: #2d3748; }
-          .header-info p { margin: 5px 0 0 0; color: #718096; font-size: 0.9rem; }
-          .question-page { page-break-after: always; display: flex; flex-direction: column; background: white; padding: 40px; }
-          .question-title { font-weight: 700; margin-bottom: 25px; font-size: 1.6rem; color: #2d3748; display: flex; align-items: flex-start; gap: 15px; }
-          .question-title .badge { background: #3182ce; color: white; padding: 6px 16px; border-radius: 10px; font-size: 1rem; }
-          .question-img { width: 100%; max-height: 500px; object-fit: contain; margin: 20px auto; display: block; border-radius: 15px; border: 8px solid #fff; }
-          .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-          .option { padding: 20px; background: #f7fafc; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1.1rem; color: #4a5568; }
-          .correct-option { background: #f0fff4; border-color: #48bb78; color: #22543d; font-weight: 700; }
-          .footer-page { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 0.8rem; }
-        </style>
-        <div class="pdf-body">
-          <div class="branding-header">
-            <span>dentisitlogy.com</span>
-            <span>t.me/dentisitlogy</span>
-          </div>
-          <div class="header-info">
-            <h1>🦷 Patho Final Quiz</h1>
-            <p>Lab: ${document.getElementById('selected-lab-text').textContent} | Total: ${questions.length} Questions</p>
-          </div>
-      `;
-
-      let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-      questions.forEach((q, index) => {
-        // Start a new page every 2 questions
-        if (index % 2 === 0) {
-          html += '<div class="question-page">';
-        }
-
-        html += '<div class="question-container" style="margin-bottom: 30px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px;">';
-        html += '<div class="question-title"><span class="badge">Question ' + (index + 1) + '</span> <span>What is the diagnosis?</span></div>';
-        let imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
-        html += '<img src="' + imgSrc + '" class="question-img" style="max-height: 400px;" />';
-        html += '<div class="options-grid">';
-        q.options.forEach((opt, optIndex) => {
-          let isCorrect = (optIndex === q.correct);
-          let optClass = isCorrect ? 'option correct-option' : 'option';
-          html += '<div class="' + optClass + '">' + opt + '</div>';
+      const getBase64Image = (imgUrl) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width; canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/jpeg'));
+          };
+          img.onerror = () => resolve(null);
+          img.src = imgUrl;
         });
-        html += '</div>';
-        html += '</div>';
-
-        // Close page after 2 questions OR if it's the last question
-        if (index % 2 === 1 || index === questions.length - 1) {
-          html += '<div class="footer-page">Patho Final Quiz - Questions ' + (Math.max(1, index)) + '-' + (index + 1) + '</div>';
-          html += '</div>';
-        }
-      });
-
-      html += '</div>';
-      printContent.innerHTML = html;
-
-      const opt = {
-        margin: 0,
-        filename: 'Patho_Quiz.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
 
       try {
-        // Wait for all images in the printContent to load
-        const images = printContent.querySelectorAll('img');
-        await Promise.all(Array.from(images).map(img => {
-          if (img.complete) return Promise.resolve();
-          return new Promise(resolve => { img.onload = img.onerror = resolve; });
-        }));
+        let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        const prepared = [];
+        for (let i = 0; i < questions.length; i++) {
+          btn.innerHTML = `⌛ جاري معالجة الصور (${Math.round((i/questions.length)*100)}%)...`;
+          const q = questions[i];
+          const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
+          const b64 = await getBase64Image(imgSrc);
+          prepared.push({ ...q, b64 });
+        }
+
+        btn.innerHTML = '⌛ جاري إنشاء الـ PDF...';
+        let printContent = document.createElement('div');
+        printContent.style.cssText = 'position:fixed; top:0; left:0; width:800px; z-index:-9999; opacity:0; background:#f7fafc;';
+        document.body.appendChild(printContent);
+        
+        let html = `
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+            .pdf-body { font-family: 'Inter', sans-serif; color: #1a202c; line-height: 1.5; background: #f7fafc; width: 800px; }
+            .branding-header { display: flex; justify-content: space-between; padding: 10px 40px; background: #2d3748; color: white; font-weight: bold; font-size: 0.9rem; }
+            .header-info { text-align: center; margin: 20px; padding: 20px; background: white; border-radius: 12px; border-top: 5px solid #3182ce; }
+            .header-info h1 { margin: 0; font-size: 1.8rem; }
+            .question-page { page-break-after: always; display: flex; flex-direction: column; background: white; padding: 40px; min-height: 1000px; }
+            .question-container { margin-bottom: 30px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+            .question-title { font-weight: 700; margin-bottom: 20px; font-size: 1.4rem; color: #2d3748; display: flex; align-items: flex-start; gap: 15px; }
+            .question-title .badge { background: #3182ce; color: white; padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; }
+            .question-img { width: 100%; max-height: 400px; object-fit: contain; margin: 15px auto; display: block; border-radius: 12px; border: 6px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .option { padding: 15px; background: #f7fafc; border-radius: 10px; border: 2px solid #e2e8f0; font-size: 1rem; color: #4a5568; }
+            .correct-option { background: #f0fff4; border-color: #48bb78; color: #22543d; font-weight: 700; position: relative; }
+            .footer-page { text-align: center; margin-top: auto; color: #a0aec0; font-size: 0.8rem; padding-top: 20px; }
+          </style>
+          <div class="pdf-body">
+            <div class="branding-header"><span>dentisitlogy.com</span><span>t.me/dentisitlogy</span></div>
+            <div class="header-info"><h1>🦷 Patho Final Quiz</h1><p>Lab: ${document.getElementById('selected-lab-text').textContent} | Total: ${questions.length} Questions</p></div>
+        `;
+
+        prepared.forEach((q, index) => {
+          if (index % 2 === 0) html += '<div class="question-page">';
+          html += '<div class="question-container">';
+          html += '<div class="question-title"><span class="badge">Q' + (index + 1) + '</span> <span>What is the diagnosis?</span></div>';
+          if (q.b64) html += '<img src="' + q.b64 + '" class="question-img" />';
+          html += '<div class="options-grid">';
+          q.options.forEach((opt, optIndex) => {
+            let optClass = (optIndex === q.correct) ? 'option correct-option' : 'option';
+            html += '<div class="' + optClass + '">' + opt + (optIndex === q.correct ? ' ✓' : '') + '</div>';
+          });
+          html += '</div></div>';
+          if (index % 2 === 1 || index === prepared.length - 1) {
+            html += '<div class="footer-page">Patho Final Quiz - Questions ' + (index + 1) + '</div></div>';
+          }
+        });
+
+        html += '</div>';
+        printContent.innerHTML = html;
 
         const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
         const fileName = `Patho_Quiz_${timestamp}.pdf`;
-        
-        const pdfBlob = await html2pdf().set({ ...opt, filename: fileName }).from(printContent).output('blob');
+        const opt = { margin: 0, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+
+        const pdfBlob = await html2pdf().set(opt).from(printContent).output('blob');
         document.body.removeChild(printContent);
         
         btn.innerHTML = '📤 اضغط هنا لإرسال الملف';
-        
         const file = new File([pdfBlob], fileName, { type: "application/pdf" });
         
         btn.onclick = async (e) => {
           e.stopPropagation();
           if (navigator.share) {
-            try {
-              await navigator.share({
-                files: [file],
-                title: 'Patho Quiz',
-                text: 'Solved Questions'
-              });
-            } catch (err) {
-              const link = document.createElement('a');
-              link.href = URL.createObjectURL(pdfBlob);
-              link.download = fileName;
-              link.click();
-            }
+            try { await navigator.share({ files: [file], title: 'Patho Quiz', text: 'Solved Questions' }); }
+            catch (err) { const link = document.createElement('a'); link.href = URL.createObjectURL(pdfBlob); link.download = fileName; link.click(); }
           } else {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(pdfBlob);
-            link.download = fileName;
-            link.click();
+            const link = document.createElement('a'); link.href = URL.createObjectURL(pdfBlob); link.download = fileName; link.click();
           }
-          
-          setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.onclick = downloadPDF;
-          }, 2000);
+          setTimeout(() => { btn.innerHTML = originalText; btn.onclick = downloadPDF; }, 3000);
         };
-
-      } catch (err) {
-        console.error(err);
-        alert("خطأ في التحميل.");
-        btn.innerHTML = originalText;
-      }
+      } catch (err) { console.error(err); alert("خطأ في التحميل."); btn.innerHTML = originalText; }
     }
 
     const terminalSentences = [
