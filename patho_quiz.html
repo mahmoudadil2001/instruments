@@ -1091,6 +1091,19 @@
     let userAnswers = {};
     let reviewMode = false;
     let wrongQuestions = [];
+    let preloadedImages = new Set();
+
+    function preloadImages(questionsToLoad) {
+      let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      questionsToLoad.forEach((q) => {
+        const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
+        if (preloadedImages.has(imgSrc)) return;
+
+        const img = new Image();
+        img.onload = () => preloadedImages.add(imgSrc);
+        img.src = imgSrc;
+      });
+    }
 
     // Shuffle array
     function shuffle(arr) {
@@ -1177,6 +1190,7 @@
       const checkbox = document.getElementById('lab-dropdown-checkbox');
       if(checkbox) checkbox.checked = true;
       updateLabSelection();
+      setTimeout(() => { preloadImages(QUIZ_DATA.slice(0, 15)); }, 1000);
     }
 
     function startQuiz() {
@@ -1209,6 +1223,10 @@
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('quiz-screen').style.display = 'block';
       document.getElementById('progress-bar').style.display = 'block';
+
+      // Prioritize preloading for the current quiz set
+      preloadImages(questions);
+
       loadQuestion();
     }
 
@@ -1226,8 +1244,26 @@
       const loading = document.getElementById('img-loading');
       img.style.display = 'none';
       loading.style.display = 'block';
-      loading.textContent = 'Loading image...';
-      img.src = 'named_images/' + q.img;
+      
+      let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
+
+      if (!preloadedImages.has(imgSrc)) {
+        loading.innerHTML = '<div style="display:flex; flex-direction:column; gap:10px;"><span>🦷 جاري تحميل الصورة من السيرفر...</span><small style="font-size:0.8rem; color:#7a9cb8;">يرجى الانتظار ثانية واحدة</small></div>';
+      } else {
+        loading.textContent = 'Loading...';
+      }
+
+      img.onload = () => {
+        img.style.display = 'block';
+        loading.style.display = 'none';
+        preloadedImages.add(imgSrc);
+      };
+      img.onerror = () => {
+        loading.style.display = 'block';
+        loading.innerHTML = '<span>❌ تعذر تحميل الصورة</span>';
+      };
+      img.src = imgSrc;
 
       // Set options
       for (let i = 0; i < 4; i++) {
@@ -1356,6 +1392,7 @@
       document.getElementById('results-screen').style.display = 'none';
       document.getElementById('quiz-screen').style.display = 'block';
       document.getElementById('progress-bar').style.display = 'block';
+      preloadImages(questions);
       loadQuestion();
     }
 
