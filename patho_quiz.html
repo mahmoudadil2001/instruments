@@ -881,22 +881,124 @@
           text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #fff;
         }
       }
-      .lab-select-main > .lab-select-inp { display: none; }
-      .lab-select-main { font-weight: 800; color: white; background-color: darkviolet; padding: 5px 20px; border-radius: 10px; display: flex; align-items: center; height: 3.5rem; width: 100%; max-width: 350px; position: relative; cursor: pointer; justify-content: space-between; margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 20; }
-      .lab-select-menu-container { background-color: white; color: darkviolet; border-radius: 10px; position: absolute; width: 100%; left: 0; top: 110%; max-height: 250px; overflow-y: auto; clip-path: inset(0% 0% 0% 0% round 10px); transition: all 0.4s; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-      .lab-select-menu-container::-webkit-scrollbar { width: 8px; }
-      .lab-select-menu-container::-webkit-scrollbar-thumb { background-color: darkviolet; border-radius: 10px; }
-      .lab-select-menu-list { --delay: 0.1s; --trdelay: 0.03s; padding: 12px 15px; transition: background-color 0.2s 0s; position: relative; transform: translateY(30px); opacity: 0; font-size: 0.95rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.05); }
-      .lab-select-menu-list:last-child { border-bottom: none; }
-      .lab-select-menu-list:hover { background-color: rgba(148, 0, 211, 0.1); }
-      .lab-select-inp:checked ~ .lab-select-menu-container { clip-path: inset(10% 50% 90% 50% round 10px); pointer-events: none; }
-      .lab-select-inp:not(:checked) ~ .lab-select-menu-container .lab-select-menu-list { transform: translateY(0); opacity: 1; transition: transform 0.4s calc(var(--delay) + (var(--trdelay) * var(--i))), opacity 0.4s calc(var(--delay) + (var(--trdelay) * var(--i))); }
-      .lab-select-bar-inp { -webkit-appearance: none; display: none; visibility: hidden; }
-      .lab-select-bar { display: flex; height: 16px; width: 20px; flex-direction: column; gap: 3px; justify-content: center; }
-      .lab-select-bar-list { display: block; width: 100%; height: 3px; border-radius: 50px; background-color: white; transition: all 0.4s; transform-origin: center; }
-      .lab-select-inp:not(:checked) ~ .lab-select-bar > .top { transform: translateY(6px) rotate(-45deg); }
-      .lab-select-inp:not(:checked) ~ .lab-select-bar > .middle { transform: translateX(-50%); opacity: 0; }
-      .lab-select-inp:not(:checked) ~ .lab-select-bar > .bottom { transform: translateY(-6px) rotate(45deg); }
+
+      .lab-select-main>.lab-select-inp {
+        display: none;
+      }
+
+      .lab-select-main {
+        font-weight: 800;
+        color: white;
+        background-color: darkviolet;
+        padding: 5px 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        height: 3.5rem;
+        width: 100%;
+        max-width: 350px;
+        position: relative;
+        cursor: pointer;
+        justify-content: space-between;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        z-index: 20;
+      }
+
+      .lab-select-menu-container {
+        background-color: white;
+        color: darkviolet;
+        border-radius: 10px;
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 110%;
+        max-height: 250px;
+        overflow-y: auto;
+        clip-path: inset(0% 0% 0% 0% round 10px);
+        transition: all 0.4s;
+        z-index: 100;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+
+      .lab-select-menu-container::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .lab-select-menu-container::-webkit-scrollbar-thumb {
+        background-color: darkviolet;
+        border-radius: 10px;
+      }
+
+      .lab-select-menu-list {
+        --delay: 0.1s;
+        --trdelay: 0.03s;
+        padding: 12px 15px;
+        transition: background-color 0.2s 0s;
+        position: relative;
+        transform: translateY(30px);
+        opacity: 0;
+        font-size: 0.95rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .lab-select-menu-list:last-child {
+        border-bottom: none;
+      }
+
+      .lab-select-menu-list:hover {
+        background-color: rgba(148, 0, 211, 0.1);
+      }
+
+      .lab-select-inp:checked~.lab-select-menu-container {
+        clip-path: inset(10% 50% 90% 50% round 10px);
+        pointer-events: none;
+      }
+
+      .lab-select-inp:not(:checked)~.lab-select-menu-container .lab-select-menu-list {
+        transform: translateY(0);
+        opacity: 1;
+        transition: transform 0.4s calc(var(--delay) + (var(--trdelay) * var(--i))), opacity 0.4s calc(var(--delay) + (var(--trdelay) * var(--i)));
+      }
+
+      .lab-select-bar-inp {
+        -webkit-appearance: none;
+        display: none;
+        visibility: hidden;
+      }
+
+      .lab-select-bar {
+        display: flex;
+        height: 16px;
+        width: 20px;
+        flex-direction: column;
+        gap: 3px;
+        justify-content: center;
+      }
+
+      .lab-select-bar-list {
+        display: block;
+        width: 100%;
+        height: 3px;
+        border-radius: 50px;
+        background-color: white;
+        transition: all 0.4s;
+        transform-origin: center;
+      }
+
+      .lab-select-inp:not(:checked)~.lab-select-bar>.top {
+        transform: translateY(6px) rotate(-45deg);
+      }
+
+      .lab-select-inp:not(:checked)~.lab-select-bar>.middle {
+        transform: translateX(-50%);
+        opacity: 0;
+      }
+
+      .lab-select-inp:not(:checked)~.lab-select-bar>.bottom {
+        transform: translateY(-6px) rotate(45deg);
+      }
     </style>
 
     <button id="toggle-info-btn" onclick="toggleProfileInfo()"
@@ -967,7 +1069,9 @@
       <h3 style="color:#4dd9f7; font-size:1.4rem; margin-bottom: 10px;">Ready for the Quiz?</h3>
       <div style="margin-bottom: 20px; text-align: center; width: 100%; display: flex; justify-content: center;">
         <label class="lab-select-main" id="lab-dropdown-label">
-          <span id="selected-lab-text" style="font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">All Labs (كل الابات)</span>
+          <span id="selected-lab-text"
+            style="font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">All
+            Labs (كل الابات)</span>
           <input class="lab-select-inp" checked="" type="checkbox" id="lab-dropdown-checkbox" />
           <div class="lab-select-bar">
             <span class="top lab-select-bar-list"></span>
@@ -975,27 +1079,46 @@
             <span class="bottom lab-select-bar-list"></span>
           </div>
           <section class="lab-select-menu-container">
-            <div class="lab-select-menu-list" style="--i:0;" onclick="selectLab('all', 'All Labs (كل الابات)', event)">All Labs (كل الابات)</div>
-            <div class="lab-select-menu-list" style="--i:1;" onclick="selectLab(1, 'Lab 1: Fibroosseous lesions', event)">Lab 1: Fibroosseous lesions</div>
-            <div class="lab-select-menu-list" style="--i:2;" onclick="selectLab(2, 'Lab 2: Odontogenic cyst', event)">Lab 2: Odontogenic cyst</div>
-            <div class="lab-select-menu-list" style="--i:3;" onclick="selectLab(3, 'Lab 3: Periapical pathology', event)">Lab 3: Periapical pathology</div>
-            <div class="lab-select-menu-list" style="--i:4;" onclick="selectLab(4, 'Lab 4: Disorder of dental pulp', event)">Lab 4: Disorder of dental pulp</div>
-            <div class="lab-select-menu-list" style="--i:5;" onclick="selectLab(5, 'Lab 5: Cysts of the jaw', event)">Lab 5: Cysts of the jaw</div>
-            <div class="lab-select-menu-list" style="--i:6;" onclick="selectLab(6, 'Lab 6: Benign bone Neoplasms', event)">Lab 6: Benign bone Neoplasms</div>
-            <div class="lab-select-menu-list" style="--i:7;" onclick="selectLab(7, 'Lab 7: Oral mucosal lesions', event)">Lab 7: Oral mucosal lesions</div>
-            <div class="lab-select-menu-list" style="--i:8;" onclick="selectLab(8, 'Lab 8: Giant cell lesions', event)">Lab 8: Giant cell lesions</div>
-            <div class="lab-select-menu-list" style="--i:9;" onclick="selectLab(9, 'Lab 9: Immune mediated disorders', event)">Lab 9: Immune mediated disorders</div>
-            <div class="lab-select-menu-list" style="--i:10;" onclick="selectLab(10, 'Lab 10: Immune mediated disorders (II)', event)">Lab 10: Immune mediated disorders (II)</div>
-            <div class="lab-select-menu-list" style="--i:11;" onclick="selectLab(11, 'Lab 11: Dental caries', event)">Lab 11: Dental caries</div>
-            <div class="lab-select-menu-list" style="--i:12;" onclick="selectLab(12, 'Lab 12: Inflammatory Diseases Of Bone', event)">Lab 12: Inflammatory Diseases Of Bone</div>
-            <div class="lab-select-menu-list" style="--i:13;" onclick="selectLab(13, 'Lab 13: Malignant bone tumors', event)">Lab 13: Malignant bone tumors</div>
-            <div class="lab-select-menu-list" style="--i:14;" onclick="selectLab(14, 'Lab 14: Odontogenic tumors', event)">Lab 14: Odontogenic tumors</div>
-            <div class="lab-select-menu-list" style="--i:15;" onclick="selectLab(15, 'Lab 15: Biopsy', event)">Lab 15: Biopsy</div>
+            <div class="lab-select-menu-list" style="--i:0;" onclick="selectLab('all', 'All Labs (كل الابات)', event)">
+              All Labs (كل الابات)</div>
+            <div class="lab-select-menu-list" style="--i:1;"
+              onclick="selectLab(1, 'Lab 1: Fibroosseous lesions', event)">Lab 1: Fibroosseous lesions</div>
+            <div class="lab-select-menu-list" style="--i:2;" onclick="selectLab(2, 'Lab 2: Odontogenic cyst', event)">
+              Lab 2: Odontogenic cyst</div>
+            <div class="lab-select-menu-list" style="--i:3;"
+              onclick="selectLab(3, 'Lab 3: Periapical pathology', event)">Lab 3: Periapical pathology</div>
+            <div class="lab-select-menu-list" style="--i:4;"
+              onclick="selectLab(4, 'Lab 4: Disorder of dental pulp', event)">Lab 4: Disorder of dental pulp</div>
+            <div class="lab-select-menu-list" style="--i:5;" onclick="selectLab(5, 'Lab 5: Cysts of the jaw', event)">
+              Lab 5: Cysts of the jaw</div>
+            <div class="lab-select-menu-list" style="--i:6;"
+              onclick="selectLab(6, 'Lab 6: Benign bone Neoplasms', event)">Lab 6: Benign bone Neoplasms</div>
+            <div class="lab-select-menu-list" style="--i:7;"
+              onclick="selectLab(7, 'Lab 7: Oral mucosal lesions', event)">Lab 7: Oral mucosal lesions</div>
+            <div class="lab-select-menu-list" style="--i:8;" onclick="selectLab(8, 'Lab 8: Giant cell lesions', event)">
+              Lab 8: Giant cell lesions</div>
+            <div class="lab-select-menu-list" style="--i:9;"
+              onclick="selectLab(9, 'Lab 9: Immune mediated disorders', event)">Lab 9: Immune mediated disorders</div>
+            <div class="lab-select-menu-list" style="--i:10;"
+              onclick="selectLab(10, 'Lab 10: Immune mediated disorders (II)', event)">Lab 10: Immune mediated disorders
+              (II)</div>
+            <div class="lab-select-menu-list" style="--i:11;" onclick="selectLab(11, 'Lab 11: Dental caries', event)">
+              Lab 11: Dental caries</div>
+            <div class="lab-select-menu-list" style="--i:12;"
+              onclick="selectLab(12, 'Lab 12: Inflammatory Diseases Of Bone', event)">Lab 12: Inflammatory Diseases Of
+              Bone</div>
+            <div class="lab-select-menu-list" style="--i:13;"
+              onclick="selectLab(13, 'Lab 13: Malignant bone tumors', event)">Lab 13: Malignant bone tumors</div>
+            <div class="lab-select-menu-list" style="--i:14;"
+              onclick="selectLab(14, 'Lab 14: Odontogenic tumors', event)">Lab 14: Odontogenic tumors</div>
+            <div class="lab-select-menu-list" style="--i:15;" onclick="selectLab(15, 'Lab 15: Biopsy', event)">Lab 15:
+              Biopsy</div>
           </section>
         </label>
       </div>
 
-      <p style="color:#7a9cb8; margin-bottom: 15px; font-size: 1.05rem;"اذا اول مرة تفتح الموقع لازم تنتضر شوية يتحملن الصور 
+      <p style="color:#7a9cb8; margin-bottom: 15px; font-size: 1.05rem;">
+        اذا اول مرة تفتح الموقع لازم تنتظر شوية يتحملن الصور
       </p>
       <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
         <input type="number" id="num-questions" class="setup-input" min="1" max="484" value="20">
@@ -1008,14 +1131,6 @@
   </div>
 
   <div class="quiz-card" id="quiz-screen" style="display:none">
-    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; width: 100%; gap: 10px;">
-      <button onclick="downloadPDF()" class="btn" style="font-size: 1rem; padding: 10px 20px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); display: flex; align-items: center; gap: 8px; justify-content: center; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer;">
-        📄 تحميل الأسئلة الحالية (PDF)
-      </button>
-      <div style="color: #f39c12; font-size: 0.75rem; text-align: center; background: rgba(243, 156, 18, 0.05); padding: 5px; border-radius: 5px;">
-        ملاحظة: أندرويد؟ افتح الموقع بمتصفح خارجي.
-      </div>
-    </div>
     <div class="question-num" id="question-num">Question 1 / 484</div>
 
     <div class="img-container">
@@ -1154,9 +1269,9 @@
         }
         availableCount = QUIZ_DATA.filter(q => allowedLabels.has(q.label)).length;
       }
-      
+
       let maxAllowed = Math.min(availableCount, 20);
-      
+
       const numInput = document.getElementById('num-questions');
       const maxLabel = document.getElementById('max-q-label');
       numInput.max = maxAllowed;
@@ -1183,12 +1298,12 @@
 
       // Reset stats display
       document.getElementById('progress-fill').style.width = '0%';
-      
+
       currentSelectedLab = 'all';
       const labelText = document.getElementById('selected-lab-text');
-      if(labelText) labelText.textContent = 'All Labs (كل الابات)';
+      if (labelText) labelText.textContent = 'All Labs (كل الابات)';
       const checkbox = document.getElementById('lab-dropdown-checkbox');
-      if(checkbox) checkbox.checked = true;
+      if (checkbox) checkbox.checked = true;
       updateLabSelection();
       setTimeout(() => { preloadImages(QUIZ_DATA.slice(0, 15)); }, 1000);
     }
@@ -1244,7 +1359,7 @@
       const loading = document.getElementById('img-loading');
       img.style.display = 'none';
       loading.style.display = 'block';
-      
+
       let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
       const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
 
@@ -1405,7 +1520,7 @@
       const btn = document.querySelector('#quiz-screen .btn');
       const originalText = btn.innerHTML;
       btn.innerHTML = '⌛ جاري تحضير الصور...';
-      
+
       const getBase64Image = (imgUrl) => {
         return new Promise((resolve) => {
           const img = new Image();
@@ -1425,7 +1540,7 @@
         let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
         const prepared = [];
         for (let i = 0; i < questions.length; i++) {
-          btn.innerHTML = `⌛ جاري معالجة الصور (${Math.round((i/questions.length)*100)}%)...`;
+          btn.innerHTML = `⌛ جاري معالجة الصور (${Math.round((i / questions.length) * 100)}%)...`;
           const q = questions[i];
           const imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
           const b64 = await getBase64Image(imgSrc);
@@ -1436,7 +1551,7 @@
         let printContent = document.createElement('div');
         printContent.style.cssText = 'position:fixed; top:0; left:0; width:800px; z-index:-9999; opacity:0; background:#f7fafc;';
         document.body.appendChild(printContent);
-        
+
         let html = `
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -1484,10 +1599,10 @@
 
         const pdfBlob = await html2pdf().set(opt).from(printContent).output('blob');
         document.body.removeChild(printContent);
-        
+
         btn.innerHTML = '📤 اضغط هنا لإرسال الملف';
         const file = new File([pdfBlob], fileName, { type: "application/pdf" });
-        
+
         btn.onclick = async (e) => {
           e.stopPropagation();
           if (navigator.share) {
