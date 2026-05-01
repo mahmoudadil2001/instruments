@@ -1438,38 +1438,43 @@
         const pdfBlob = await html2pdf().set({ ...opt, filename: fileName }).from(printContent).output('blob');
         document.body.removeChild(printContent);
         
-        btn.innerHTML = '✅ جاهز!';
-
+        btn.innerHTML = '📤 اضغط هنا لإرسال الملف';
+        
         const file = new File([pdfBlob], fileName, { type: "application/pdf" });
         
-        // On Android Telegram Browser, navigator.share can be buggy. 
-        // We will prioritize a clean download + direct Telegram link for stability.
-        const downloadFile = () => {
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(pdfBlob);
-          link.download = fileName;
-          link.click();
+        // Remove old listener if any and add a new one for manual share
+        btn.onclick = async (e) => {
+          e.stopPropagation();
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: 'Patho Quiz',
+                text: 'Solved Questions'
+              });
+            } catch (err) {
+              // Fallback to manual download if share fails
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(pdfBlob);
+              link.download = fileName;
+              link.click();
+              alert("تم تحميل الملف! يرجى إرساله يدوياً.");
+            }
+          } else {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(pdfBlob);
+            link.download = fileName;
+            link.click();
+            alert("المتصفح لا يدعم المشاركة المباشرة، تم تحميل الملف لجهازك.");
+          }
+          
+          // Restore original button after sharing
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.onclick = downloadPDF;
+          }, 2000);
         };
 
-        if (navigator.share && /Android/i.test(navigator.userAgent)) {
-          // If Android, we try to share but also provide a fallback immediately
-          downloadFile();
-          setTimeout(() => {
-            if(confirm("تم تحميل الملف باسم " + fileName + "\nهل تريد فتح تلجرام لإرساله؟")) {
-              window.location.href = "https://t.me/share/url?url=https://dentisitlogy.com&text=I%20just%20finished%20my%20Patho%20Quiz!";
-            }
-          }, 1000);
-        } else if (navigator.share) {
-          try {
-            await navigator.share({ files: [file], title: 'Patho Quiz', text: 'Solved Questions' });
-          } catch(e) {
-            downloadFile();
-          }
-        } else {
-          downloadFile();
-        }
-
-        setTimeout(() => { btn.innerHTML = originalText; }, 3000);
       } catch (err) {
         console.error(err);
         alert("خطأ في التحميل.");
