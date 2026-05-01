@@ -402,7 +402,7 @@
   <h1>🦷 Patho Final Quiz</h1>
   <p class="subtitle">Oral Pathology — 484 Slides</p>
 
-  <div class="stats-bar">
+  <div class="stats-bar" id="stats-bar" style="display:none">
     <div class="stat">
       <div class="stat-val" id="stat-q">0</div>
       <div class="stat-label">Question</div>
@@ -421,19 +421,127 @@
     </div>
   </div>
 
-  <div class="progress-bar">
+  <div class="progress-bar" id="progress-bar" style="display:none">
     <div class="progress-fill" id="progress-fill" style="width:0%"></div>
   </div>
 
   <div class="quiz-card setup-screen" id="setup-screen">
-    <h2 style="color:#4dd9f7; font-size:1.8rem; margin-bottom: 10px;">Welcome to the Quiz!</h2>
-    <p style="color:#7a9cb8; margin-bottom: 15px; font-size: 1.1rem;">How many questions would you like to answer?</p>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
-      <input type="number" id="num-questions" class="setup-input" min="1" max="20" value="20">
-      <span style="color:#7a9cb8; font-size: 0.9rem;">(Max: 20)</span>
+    <style>
+      @keyframes picEnter {
+        0% { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+        100% { opacity: 1; transform: scale(1) rotate(0deg); }
+      }
+      @keyframes textFadeDown {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slideInLeft {
+        0% { opacity: 0; transform: translateX(-40px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes slideInRight {
+        0% { opacity: 0; transform: translateX(40px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes floatPulse {
+        0%, 100% { transform: translateY(0); box-shadow: 0 0 20px rgba(77,217,247,0.4); }
+        50% { transform: translateY(-8px); box-shadow: 0 0 30px rgba(77,217,247,0.8); }
+      }
+      @keyframes popIn {
+        0% { opacity: 0; transform: scale(0.8); }
+        70% { opacity: 1; transform: scale(1.1); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      
+      @keyframes blinkCursor {
+        50% { border-left-color: transparent; }
+      }
+      @keyframes typeAndDelete {
+        0%, 10% { width: 0; }
+        45%, 55% { width: var(--type-width, 100%); }
+        90%, 100% { width: 0; }
+      }
+      .terminal-loader {
+        border: 0.1em solid #333; background-color: #1a1a1a; color: #0f0;
+        font-family: "Courier New", Courier, monospace; font-size: 1rem;
+        padding: 2.5em 1em 1.5em 1em; width: 100%; max-width: 22em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); border-radius: 8px;
+        position: relative; overflow: hidden; box-sizing: border-box;
+        margin-bottom: 15px; direction: ltr; text-align: left;
+      }
+      .terminal-header {
+        position: absolute; top: 0; left: 0; right: 0; height: 1.5em;
+        background-color: #333; border-top-left-radius: 4px; border-top-right-radius: 4px;
+        padding: 0 0.4em; box-sizing: border-box;
+      }
+      .terminal-controls { float: right; }
+      .control {
+        display: inline-block; width: 0.6em; height: 0.6em; margin-left: 0.4em;
+        border-radius: 50%; background-color: #777;
+      }
+      .control.close { background-color: #e33; }
+      .control.minimize { background-color: #ee0; }
+      .control.maximize { background-color: #0b0; }
+      .terminal-title { float: left; line-height: 1.5em; color: #eee; font-size: 0.9em; }
+      .text {
+        display: inline-block; white-space: nowrap; overflow: hidden;
+        border-left: 0.2em solid #0f0; padding-left: 0.2em;
+        animation: typeAndDelete 4s steps(var(--type-steps, 15)) infinite, blinkCursor 0.5s step-end infinite alternate;
+        direction: rtl; font-weight: bold; font-size: 1.1rem;
+      }
+      
+      .stagger-1 { animation: picEnter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, floatPulse 4s ease-in-out 0.8s infinite; opacity: 0; }
+      .stagger-2 { animation: textFadeDown 0.6s ease-out 0.3s forwards; opacity: 0; }
+      .stagger-3 { animation: slideInLeft 0.7s ease-out 0.6s forwards; opacity: 0; }
+      .stagger-4 { animation: slideInUp 0.7s ease-out 0.9s forwards; opacity: 0; }
+      .stagger-5 { animation: slideInRight 0.7s ease-out 1.2s forwards; opacity: 0; }
+      .stagger-6 { animation: popIn 0.8s ease-out 1.6s forwards; opacity: 0; }
+      .stagger-7 { animation: slideInUp 0.6s ease-out 2.0s forwards; opacity: 0; }
+    </style>
+    
+    <button id="toggle-info-btn" onclick="toggleProfileInfo()" style="width: 100%; max-width: 300px; padding: 10px; background: rgba(77,217,247,0.1); border: 1px solid rgba(77,217,247,0.3); border-radius: 8px; color: #4dd9f7; cursor: pointer; font-size: 1rem; margin-bottom: 20px; transition: all 0.3s; margin-left: auto; margin-right: auto; display: block;">
+      Developer Info ▼
+    </button>
+    
+    <div id="profile-info-container" style="display: none; margin-bottom: 10px; flex-direction: column; align-items: center; overflow: hidden; width: 100%;">
+      <img src="mahmoud.png" alt="Mahmoud Adil" class="stagger-1" style="width: 130px; height: 130px; border-radius: 50%; border: 4px solid #4dd9f7; object-fit: cover; margin-bottom: 15px;">
+      
+      <h2 class="stagger-2" style="color:#e0e8f0; font-size: 1.6rem; margin-bottom: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.2);">Mahmoud Adil</h2>
+      
+      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; width: 100%;">
+        <a href="https://t.me/io_620" target="_blank" class="stagger-3" style="color: #4dd9f7; text-decoration: none; font-size: 0.95rem; display: flex; align-items: center; gap: 5px; background: rgba(77,217,247,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(77,217,247,0.3);">💬 @io_620</a>
+        <a href="https://t.me/dentisitlogy" target="_blank" class="stagger-4" style="color: #4dd9f7; text-decoration: none; font-size: 0.95rem; display: flex; align-items: center; gap: 5px; background: rgba(77,217,247,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(77,217,247,0.3);">📢 t.me/dentisitlogy</a>
+        <a href="https://dentisitlogy.com" target="_blank" class="stagger-5" style="color: #4dd9f7; text-decoration: none; font-size: 0.95rem; display: flex; align-items: center; gap: 5px; background: rgba(77,217,247,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(77,217,247,0.3);">🌐 dentisitlogy.com</a>
+      </div>
+      
+      <div class="terminal-loader stagger-6">
+        <div class="terminal-header">
+          <div class="terminal-title">Status</div>
+          <div class="terminal-controls">
+            <div class="control close"></div>
+            <div class="control minimize"></div>
+            <div class="control maximize"></div>
+          </div>
+        </div>
+        <div class="text" id="terminal-text">باثو ما يرحم</div>
+      </div>
     </div>
-    <button class="btn btn-primary" onclick="startQuiz()" style="font-size: 1.2rem; padding: 14px 40px;">Start Quiz
-      🚀</button>
+    
+    <div class="stagger-7" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+      <div style="width: 100%; height: 1px; background: rgba(77,217,247,0.2); margin-bottom: 20px;"></div>
+
+      <h3 style="color:#4dd9f7; font-size:1.4rem; margin-bottom: 10px;">Ready for the Quiz?</h3>
+      <p style="color:#7a9cb8; margin-bottom: 15px; font-size: 1.05rem;">How many questions would you like to answer?</p>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
+        <input type="number" id="num-questions" class="setup-input" min="1" max="20" value="20">
+        <span style="color:#7a9cb8; font-size: 0.9rem;">(Max: 20)</span>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="font-size: 1.2rem; padding: 14px 40px; transition: transform 0.2s, box-shadow 0.2s;">Start Quiz 🚀</button>
+    </div>
   </div>
 
   <div class="quiz-card" id="quiz-screen" style="display:none">
@@ -505,11 +613,30 @@
       return a;
     }
 
+    function toggleProfileInfo() {
+      const container = document.getElementById('profile-info-container');
+      const btn = document.getElementById('toggle-info-btn');
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        btn.innerHTML = 'Developer Info ▲';
+      } else {
+        container.style.display = 'none';
+        btn.innerHTML = 'Developer Info ▼';
+      }
+    }
+
     function init() {
       allQuestions = shuffle(QUIZ_DATA);
       document.getElementById('setup-screen').style.display = 'flex';
       document.getElementById('quiz-screen').style.display = 'none';
       document.getElementById('results-screen').style.display = 'none';
+      document.getElementById('stats-bar').style.display = 'none';
+      document.getElementById('progress-bar').style.display = 'none';
+      
+      const pContainer = document.getElementById('profile-info-container');
+      if (pContainer) pContainer.style.display = 'none';
+      const pBtn = document.getElementById('toggle-info-btn');
+      if (pBtn) pBtn.innerHTML = 'Developer Info ▼';
 
       // Reset stats display
       document.getElementById('stat-q').textContent = '0';
@@ -531,6 +658,8 @@
 
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('quiz-screen').style.display = 'block';
+      document.getElementById('stats-bar').style.display = 'flex';
+      document.getElementById('progress-bar').style.display = 'block';
       loadQuestion();
     }
 
@@ -682,8 +811,46 @@
       wrongQuestions = [];
       document.getElementById('results-screen').style.display = 'none';
       document.getElementById('quiz-screen').style.display = 'block';
+      document.getElementById('stats-bar').style.display = 'flex';
+      document.getElementById('progress-bar').style.display = 'block';
       loadQuestion();
     }
+
+    const terminalSentences = [
+      "باثو ما يرحم",
+      "دماغي مسوي إضراب رسمي",
+      "أدرس لو أبچي أحسن؟",
+      "الكتاب شايفني غريب",
+      "سؤال يضحك ويبچّي",
+      "وين كنت طول السنة؟",
+      "قريت بس ما فهمت",
+      "الدكتور يحب يعقّدها",
+      "نومي أهم من الدرجة"
+    ];
+    let termIdx = 0;
+
+    function initTerminal() {
+      const textEl = document.getElementById('terminal-text');
+      if (!textEl) return;
+      
+      const updateTerminal = () => {
+        const txt = terminalSentences[termIdx];
+        textEl.textContent = txt;
+        textEl.style.setProperty('--type-width', (txt.length + 2) + 'ch');
+        textEl.style.setProperty('--type-steps', txt.length);
+      };
+
+      updateTerminal();
+
+      textEl.addEventListener('animationiteration', (e) => {
+        if (e.animationName === 'typeAndDelete') {
+          termIdx = (termIdx + 1) % terminalSentences.length;
+          updateTerminal();
+        }
+      });
+    }
+
+    initTerminal();
 
     // Start the quiz
     init();
