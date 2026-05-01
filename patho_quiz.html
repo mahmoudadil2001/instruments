@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patho Final - Image MCQ Quiz</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -1358,42 +1359,40 @@
       loadQuestion();
     }
 
-    function downloadPDF() {
+    async function downloadPDF() {
       if (!questions || questions.length === 0) {
         alert("يرجى بدء الاختبار أولاً لإنشاء الأسئلة.");
         return;
       }
 
-      let printContent = `
-        <!DOCTYPE html>
-        <html dir="ltr">
-        <head>
-          <meta charset="UTF-8">
-          <title>Patho Final Quiz - Solved Questions</title>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-            body { font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif; padding: 0; color: #1a202c; background-color: #f7fafc; line-height: 1.5; margin: 0; }
-            .branding-header { display: flex; justify-content: space-between; padding: 10px 40px; background: #2d3748; color: white; font-weight: bold; font-size: 0.9rem; }
-            .header-info { text-align: center; margin: 20px; padding: 20px; background: white; border-radius: 12px; border-top: 5px solid #3182ce; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-            .header-info h1 { margin: 0; font-size: 1.8rem; color: #2d3748; }
-            .header-info p { margin: 5px 0 0 0; color: #718096; font-size: 0.9rem; }
-            .question-page { page-break-after: always; min-height: 100vh; display: flex; flex-direction: column; background: white; padding: 40px; box-sizing: border-box; }
-            .question-title { font-weight: 700; margin-bottom: 25px; font-size: 1.6rem; color: #2d3748; display: flex; align-items: flex-start; gap: 15px; }
-            .question-title .badge { background: #3182ce; color: white; padding: 6px 16px; border-radius: 10px; font-size: 1rem; text-transform: uppercase; }
-            .question-img { width: 100%; max-height: 600px; object-fit: contain; margin: 20px auto; display: block; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); border: 8px solid #fff; outline: 1px solid #e2e8f0; }
-            .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: auto; }
-            .option { padding: 20px; background: #f7fafc; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1.1rem; color: #4a5568; }
-            .correct-option { background: #f0fff4; border-color: #48bb78; color: #22543d; font-weight: 700; position: relative; }
-            .correct-option::after { content: '✓ Correct'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #48bb78; color: white; padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; }
-            .footer-page { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 0.8rem; }
-            @media print {
-              body { background: white; }
-              .question-page { page-break-after: always; border: none; }
-              .branding-header { background: #2d3748 !important; -webkit-print-color-adjust: exact; }
-            }
-          </style>
-        </head>
-        <body>
+      // Show loading state
+      const btn = document.querySelector('#quiz-screen .btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '⌛ جاري تجهيز الـ PDF...';
+      btn.disabled = true;
+
+      let printContent = document.createElement('div');
+      printContent.style.backgroundColor = '#f7fafc';
+      printContent.style.width = '800px'; 
+      
+      let html = `
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+          .pdf-body { font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif; color: #1a202c; line-height: 1.5; background: #f7fafc; }
+          .branding-header { display: flex; justify-content: space-between; padding: 10px 40px; background: #2d3748; color: white; font-weight: bold; font-size: 0.9rem; }
+          .header-info { text-align: center; margin: 20px; padding: 20px; background: white; border-radius: 12px; border-top: 5px solid #3182ce; }
+          .header-info h1 { margin: 0; font-size: 1.8rem; color: #2d3748; }
+          .header-info p { margin: 5px 0 0 0; color: #718096; font-size: 0.9rem; }
+          .question-page { page-break-after: always; display: flex; flex-direction: column; background: white; padding: 40px; }
+          .question-title { font-weight: 700; margin-bottom: 25px; font-size: 1.6rem; color: #2d3748; display: flex; align-items: flex-start; gap: 15px; }
+          .question-title .badge { background: #3182ce; color: white; padding: 6px 16px; border-radius: 10px; font-size: 1rem; }
+          .question-img { width: 100%; max-height: 500px; object-fit: contain; margin: 20px auto; display: block; border-radius: 15px; border: 8px solid #fff; }
+          .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+          .option { padding: 20px; background: #f7fafc; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1.1rem; color: #4a5568; }
+          .correct-option { background: #f0fff4; border-color: #48bb78; color: #22543d; font-weight: 700; }
+          .footer-page { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 0.8rem; }
+        </style>
+        <div class="pdf-body">
           <div class="branding-header">
             <span>dentisitlogy.com</span>
             <span>t.me/dentisitlogy</span>
@@ -1407,37 +1406,52 @@
       let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
 
       questions.forEach((q, index) => {
-        printContent += '<div class="question-page">';
-        printContent += '<div class="question-title"><span class="badge">Question ' + (index + 1) + '</span> <span>What is the diagnosis?</span></div>';
+        html += '<div class="question-page">';
+        html += '<div class="question-title"><span class="badge">Question ' + (index + 1) + '</span> <span>What is the diagnosis?</span></div>';
         
         let imgSrc = q.img.startsWith('http') || q.img.startsWith('data:') ? q.img : basePath + '/named_images/' + encodeURIComponent(q.img);
-        printContent += '<img src="' + imgSrc + '" class="question-img" />';
+        html += '<img src="' + imgSrc + '" class="question-img" />';
         
-        printContent += '<div class="options-grid">';
+        html += '<div class="options-grid">';
         q.options.forEach((opt, optIndex) => {
           let isCorrect = (optIndex === q.correct);
           let optClass = isCorrect ? 'option correct-option' : 'option';
-          printContent += '<div class="' + optClass + '">' + opt + '</div>';
+          html += '<div class="' + optClass + '">' + opt + '</div>';
         });
-        printContent += '</div>';
-        printContent += '<div class="footer-page">Page ' + (index + 1) + ' of ' + questions.length + ' - Patho Final Quiz</div>';
-        printContent += '</div>';
+        html += '</div>';
+        html += '<div class="footer-page">Page ' + (index + 1) + ' of ' + questions.length + ' - Patho Final Quiz</div>';
+        html += '</div>';
       });
 
-      printContent += '<\/body><\/html>';
+      html += '</div>';
+      printContent.innerHTML = html;
 
-      const blob = new Blob([printContent], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const printWindow = window.open(url, '_blank');
-      
-      if (printWindow) {
-        printWindow.onload = () => {
-          setTimeout(() => {
-            printWindow.print();
-          }, 1000);
-        };
-      } else {
-        alert("يرجى السماح بالنوافذ المنبثقة (Pop-ups) لتحميل الملف.");
+      const opt = {
+        margin: 0,
+        filename: 'Patho_Quiz_Solved.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      try {
+        await html2pdf().set(opt).from(printContent).save();
+        
+        btn.innerHTML = '✅ تم التحميل!';
+        
+        setTimeout(() => {
+          if(confirm("تم تحميل الـ PDF بنجاح! هل تريد الذهاب إلى تلجرام (الرسائل المحفوظة) لإرسال الملف؟")) {
+            window.location.href = "tg://resolve?domain=SavedMessages";
+          }
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 1500);
+
+      } catch (err) {
+        console.error(err);
+        alert("حدث خطأ أثناء إنشاء الملف.");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
       }
     }
 
