@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dentisitlogy | Mahmoud Adel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --surface: #131929;
+      --surface2: #1a2236;
+      --border: rgba(99,179,237,0.1);
+      --accent: #3ecfcf;
+      --accent2: #6c8fff;
+      --text: #e8f0fe;
+      --muted: #7a8caa;
+      --glow: 0 0 32px rgba(62,207,207,0.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 15% 0%, rgba(62,207,207,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(108,143,255,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,15,26,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 18px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      white-space: nowrap;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .logo em { color: var(--accent); font-style: normal; }
+
+    .search-wrap { position: relative; flex-shrink: 0; }
+    .search-wrap input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem;
+      padding: 7px 12px 7px 34px;
+      width: 140px;
+      outline: none;
+      transition: border-color 0.2s, width 0.3s;
+    }
+    .search-wrap input:focus { border-color: var(--accent); width: 175px; }
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.8rem;
+      pointer-events: none;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 46px 20px 30px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(62,207,207,0.09);
+      border: 1px solid rgba(62,207,207,0.22);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      padding: 5px 13px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.75rem, 5.5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    h1 .gr {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub { color: var(--muted); font-size: 0.9rem; max-width: 320px; margin: 0 auto 28px; line-height: 1.6; }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
+
+    .tabs-outer {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 18px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs-outer::-webkit-scrollbar { display: none; }
+    .tabs { display: flex; gap: 7px; width: max-content; }
+
+    .tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      padding: 6px 14px;
+      border-radius: 18px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab.active { background: var(--accent); border-color: var(--accent); color: #0b0f1a; font-weight: 600; }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 18px 80px;
+    }
+
+    .subject-card { margin-bottom: 10px; }
+
+    .subject-header {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 15px 18px;
+      cursor: pointer;
+      transition: all 0.22s;
+      color: inherit;
+    }
+
+    .subject-header:hover { background: var(--surface2); box-shadow: var(--glow); }
+
+    .subject-card.active .subject-header {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background: var(--surface2);
+    }
+
+    .s-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .s-info { flex: 1; min-width: 0; text-align: left; }
+    .s-title { font-family: 'Syne', sans-serif; font-size: 0.97rem; font-weight: 700; }
+    .s-count { font-size: 0.72rem; color: var(--muted); }
+
+    .chevron { color: var(--muted); font-size: 0.75rem; transition: transform 0.3s; }
+    .subject-card.active .chevron { transform: rotate(180deg); }
+
+    .lecture-list {
+      background: var(--surface);
+      border: 1px solid rgba(62,207,207,0.18);
+      border-top: none;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s ease-out;
+      list-style: none;
+    }
+    .subject-card.active .lecture-list { max-height: 3000px; }
+
+    .lecture-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .lecture-link:hover { background: rgba(62,207,207,0.05); }
+
+    .doc-pill {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(62,207,207,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .lec-name { flex: 1; }
+    .tg-arrow { font-size: 0.75rem; color: var(--muted); }
+
+    .hidden { display: none; }
+
+    footer {
+      text-align: center;
+      padding: 28px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">🦷</div>
+      dentisit <em>Mahmoud adel</em>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search lectures…" autocomplete="off" />
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="badge">جامعة الاسراء</div>
+  <h1>ملازم النظري<br><span class="gr">2026</span></h1>
+  <p class="hero-sub">Direct access to Al-Esraa University study materials via Telegram.</p>
+  <div class="stats">
+    <div class="stat"><span class="stat-num">10</span><div class="stat-label">Subjects</div></div>
+    <div class="stat"><span class="stat-num">200+</span><div class="stat-label">Lectures</div></div>
+  </div>
+</section>
+
+<div class="tabs-outer">
+  <div class="tabs">
+    <button class="tab active" data-filter="all">All Subjects</button>
+    <button class="tab" data-filter="Endodontics">Endodontics</button>
+    <button class="tab" data-filter="General Medicine">Medicine</button>
+    <button class="tab" data-filter="General Surgery">Surgery</button>
+    <button class="tab" data-filter="Operative">Operative</button>
+    <button class="tab" data-filter="Oral Pathology">Oral Path</button>
+    <button class="tab" data-filter="Oral Surgery">Oral Surg</button>
+    <button class="tab" data-filter="Orthodontics">Ortho</button>
+    <button class="tab" data-filter="Pedodontics">Pedo</button>
+    <button class="tab" data-filter="Periodontics">Perio</button>
+    <button class="tab" data-filter="Prosthodontics">Pros</button>
+  </div>
+</div>
+
+<main id="mainContent">
+  </main>
+
+<footer>
+  &copy; 2026 <span>Dentisitlogy</span> • Mahmoud Adel Jawhar
+</footer>
+
+<script>
+  const curriculumData = {
+    "Endodontics": {
+      icon: "🦷", color: "#0d2626",
+      lectures: [
+        { n: "(0) rubber dam", l: "4" },
+        { n: "(1) Introduction and Scope", l: "5" },
+        { n: "(2) Classification of periapical disease", l: "6" },
+        { n: "(3) Access Opening Preparation", l: "7" },
+        { n: "(3) access opening", l: "8" },
+        { n: "(4) working length determination", l: "9" },
+        { n: "(5) Clean&Shap of Root Canal", l: "10" },
+        { n: "(6) Clean&Shap of Root Canal 2", l: "11" },
+        { n: "(7) Root Canal Obturation", l: "12" }
+      ]
+    },
+    "General Medicine": {
+      icon: "🩺", color: "#0d1a2d",
+      lectures: [
+        { n: "(1) Diabetes Mellitus", l: "15" }, { n: "(2) managment of DM", l: "16" },
+        { n: "(3) WBC Disorders part 1", l: "17" }, { n: "(4) WBC disorders part 2", l: "18" },
+        { n: "(5) bleeding disorders", l: "19" }, { n: "(6) adrenal glands 1", l: "20" },
+        { n: "(7) adrenal glands 2", l: "21" }, { n: "(8) Gastrointestinal Diseases", l: "22" },
+        { n: "(9) Gastrointestinal Diseases 2", l: "23" }, { n: "(10) Inflammatory Bowel Disease 1", l: "24" },
+        { n: "(11) Inflammatory Bowel Disease 2", l: "25" }, { n: "(12) Pseudomembranous Colitis", l: "26" },
+        { n: "(13) Peptic Ulcer 1", l: "27" }, { n: "(14) Peptic Ulcer 2", l: "28" },
+        { n: "(15) heart failure", l: "29" }, { n: "(16) CVS Arrythmias", l: "30" },
+        { n: "(17) hypertension", l: "31" }, { n: "(18) ischemic heart diseases", l: "32" },
+        { n: "(19) infective endocarditis", l: "33" }, { n: "(20) imunologic disorders", l: "34" },
+        { n: "(21) thyroid gland", l: "35" }, { n: "(22) Anxiety and Eating Disorders", l: "36" },
+        { n: "(23) Psychological Disturbance", l: "37" }, { n: "(24) liver disease", l: "38" },
+        { n: "(25) drug & alcohol abuse", l: "39" }
+      ]
+    },
+    "General Surgery": {
+      icon: "🔬", color: "#1a0d0d",
+      lectures: [
+        { n: "(1) Metabolic response to injury", l: "41" }, { n: "(2) Wounds healing", l: "42" },
+        { n: "(3) Surgical wounds and infections", l: "43" }, { n: "(4) Hemorrhage and blood transfusion", l: "44" },
+        { n: "(5) Shock", l: "45" }, { n: "(6) Parenteral nutrition", l: "46" },
+        { n: "(7) Fluid balance", l: "47" }, { n: "(8) Head injuries and multiple trauma", l: "48" },
+        { n: "(9) Post operative care", l: "49" }, { n: "(10) anesthesia", l: "50" },
+        { n: "(11) Day case surgery", l: "51" }, { n: "(12) Patient safety", l: "52" },
+        { n: "(13) Medical ethics", l: "53" }
+      ]
+    },
+    "Operative": {
+      icon: "⚙️", color: "#0d1a0d",
+      lectures: [
+        { n: "(1) Assessment, Diagnosis, Treatment Planning", l: "56" }, { n: "(2) Assessment, Diagnosis, Treatment Planning 2", l: "57" },
+        { n: "(3) Biologic Consideration of Enamel", l: "58" }, { n: "(4) Biologic Consideration of Dentin 1", l: "59" },
+        { n: "(5) Biologic Consideration of Dentin 2", l: "60" }, { n: "(6) Dental caries", l: "61" },
+        { n: "(7) Pulp Irritants and inflammatory conditions", l: "62" }, { n: "(8) pulp health RD", l: "63" },
+        { n: "(9) Deep-Seated Carious lesions", l: "64" }, { n: "(10) Caries Diagnosis and treatment", l: "65" },
+        { n: "(11) Cervical Lesions", l: "66" }, { n: "(12) Composite (Direct tooth-colored restorations)", l: "67" },
+        { n: "(13) Inlays and Onlays (Indirect adhesive)", l: "68" }, { n: "(14) Inlays and Onlays 2", l: "69" },
+        { n: "(15) inlays and onlays (Ceramic veneers) 3", l: "70" }, { n: "(16) composite inlays and onlays restoration", l: "71" },
+        { n: "(17) Dental Laser", l: "72" }, { n: "(18) Dental laser 2", l: "73" },
+        { n: "(19) Fluoride Releasing Materials", l: "74" }, { n: "(20) CAD CAM Techniques", l: "75" }
+      ]
+    },
+    "Oral Pathology": {
+      icon: "🔭", color: "#1a0d1a",
+      lectures: [
+        { n: "(1) Biopsy (Principles and techniques)", l: "78" }, { n: "(2) Dental caries", l: "79" },
+        { n: "(3) Disorders of dental pulp", l: "80" }, { n: "(4) Periapical Pathology", l: "81" },
+        { n: "(5) inflammatory diseases of bone", l: "82" }, { n: "(6) Fibro osseous Lesions", l: "83" },
+        { n: "(7) Giant cell lesions", l: "84" }, { n: "(8) Metabolic and Genetic diseases of bone", l: "85" },
+        { n: "(9) bone neoplasms", l: "86" }, { n: "(10) malignant Bone tumors", l: "87" },
+        { n: "(11) odontogenic cysts", l: "88" }, { n: "(12) Odontogenic tumor", l: "89" },
+        { n: "(13) developmental defects 1", l: "90" }, { n: "(14) developmental defects 2", l: "91" },
+        { n: "(15) Oral mucosal lesions", l: "92" }, { n: "(16) Immune-Mediated disorders", l: "93" },
+        { n: "(17) Vesiculobullous lesions of oral cavity", l: "94" }, { n: "(18) Epithelial Pathology", l: "95" }
+      ]
+    },
+    "Oral Surgery": {
+      icon: "🩻", color: "#1a1a0d",
+      lectures: [
+        { n: "(1) Hypertension", l: "98" }, { n: "(2) Heart failure", l: "99" },
+        { n: "(3) Infective Endocarditis", l: "100" }, { n: "(4) Diabetes mellitus", l: "101" },
+        { n: "(5) Adrenal Insufficiency", l: "102" }, { n: "(6) Thyroid diseases", l: "103" },
+        { n: "(7) Chronic Renal Diseases", l: "104" }, { n: "(8) Bleeding disorder", l: "105" },
+        { n: "(9) Blood Dyscrasia", l: "106" }, { n: "(10) liver disease", l: "107" },
+        { n: "(11) CNS Diseases", l: "108" }, { n: "(12) Allergy", l: "109" },
+        { n: "(13) Radio and chmotherapy patients", l: "110" }, { n: "(14) Pulmonary diseases", l: "111" },
+        { n: "(15) AIDS", l: "112" }, { n: "(16) Rheumatologic and CT disorders", l: "113" },
+        { n: "(17) pregnancy", l: "114" }, { n: "(18) Odontogenic spaces P.1", l: "115" },
+        { n: "(18) Odontogenic spaces P.2", l: "116" }, { n: "(19) Complication of extraction", l: "117" },
+        { n: "(20) Principles of Flaps, Suturing", l: "118" }, { n: "(21) Osteomyelitis", l: "119" },
+        { n: "(22) Impacted Teeth P.1", l: "120" }, { n: "(22) Impacted Teeth P.2", l: "121" },
+        { n: "(22) impacted teeth P.3&4", l: "122" }, { n: "(23) Dental implant introduction", l: "123" },
+        { n: "(23) dental implant P.1", l: "124" }, { n: "(23) Dental implant P.2", l: "125" },
+        { n: "(23) dental implant P.3", l: "126" }, { n: "(23) dental implant P.4", l: "127" },
+        { n: "(24) Endodontic surgery P.1", l: "128" }, { n: "(24) Endodontic surgery P.2", l: "129" }
+      ]
+    },
+    "Orthodontics": {
+      icon: "📐", color: "#0d0d2a",
+      lectures: [
+        { n: "(0) Genetic Factors of Malocclusion", l: "132" }, { n: "(1) introduction", l: "133" },
+        { n: "(2) Andrew keys of Normal occlusion", l: "134" }, { n: "(3) Iatrogenic effect of orthodontic treatment", l: "135" },
+        { n: "(4) Classification of malocclusion", l: "136" }, { n: "(5) Etiology of malocclusion", l: "137" },
+        { n: "(6) G&D introduction", l: "138" }, { n: "(7) G&D Growth pattern, timing, variability", l: "139" },
+        { n: "(8) G&D Craniofacial Growth", l: "140" }, { n: "(9) G&D Development of Dentition& Occlusion", l: "141" },
+        { n: "(10) G&D Development of Dentition& Occlusion 2", l: "142" }, { n: "(11) tooth movement", l: "143" },
+        { n: "(12) local factors affect the occlusion", l: "144" }, { n: "(13) Biomechanical Concepts of Tooth Movements", l: "145" },
+        { n: "(14) Anchorage in Orthodontics", l: "146" }, { n: "(15) Orthodontic Appliances", l: "147" },
+        { n: "(16) Removable Orthodontic Appliances", l: "148" }, { n: "(17) orthopedic appliances", l: "149" },
+        { n: "(18) functional appliances", l: "150" }, { n: "(19) Fixed Orthodontic Appliance", l: "151" },
+        { n: "(20) Retention", l: "152" }, { n: "(21) Retainers", l: "153" }
+      ]
+    },
+    "Pedodontics": {
+      icon: "🧒", color: "#1a0d1a",
+      lectures: [
+        { n: "(1) Eruption of teeth", l: "156" }, { n: "(2) teeth numbering system", l: "157" },
+        { n: "(3) Dental caries", l: "158" }, { n: "(4) rampant caries", l: "159" },
+        { n: "(5) Morphology of primary teeth 1", l: "160" }, { n: "(6) Morphology of primary teeth 2", l: "161" },
+        { n: "(7) morphology differences primary&permenent", l: "162" }, { n: "(8) Epstein pearls, bohn nodules, dental lamina cysts", l: "163" },
+        { n: "(9) causes of delayed teeth eruption", l: "164" }, { n: "(10) Deep carious lesion treatment", l: "165" },
+        { n: "(11) Restorative materials in pedodontic", l: "166" }, { n: "(12) pulp treatment", l: "167" },
+        { n: "(13) Local anesthesia and pain control", l: "168" }
+      ]
+    },
+    "Periodontics": {
+      icon: "🦠", color: "#0d1a1a",
+      lectures: [
+        { n: "(1) Terms in periodontology", l: "171" }, { n: "(2) Periodontal ligament (PDL)", l: "172" },
+        { n: "(3) Cementum", l: "173" }, { n: "(4) Alveolar process (AP)", l: "174" },
+        { n: "(5) Classification of periodontal diseases 1", l: "175" }, { n: "(6) Classification of periodontal diseases 2", l: "176" },
+        { n: "(7) pathogenesis of periodontal disease", l: "177" }, { n: "(8) dental plaque biofilm", l: "178" },
+        { n: "(9) Microbiologic Specificity", l: "179" }, { n: "(10) Dental Calculus", l: "180" },
+        { n: "(11) dental stain", l: "181" }, { n: "(12) risk factors", l: "182" },
+        { n: "(13) Smoking and periodontal diseases", l: "183" }, { n: "(14) Treatment planning of Periodontal Diseases", l: "184" },
+        { n: "(15) Phase II Surgical Therapy", l: "185" }, { n: "(16) Periodontal instruments", l: "186" },
+        { n: "(17) Periodontal indices", l: "187" }, { n: "(18) Gingival and periodontal pocket", l: "188" },
+        { n: "(19) chemotherapy (systemic antibiotic)", l: "189" }, { n: "(20) Oral halitosis", l: "190" }
+      ]
+    },
+    "Prosthodontics": {
+      icon: "🦷", color: "#1a1a0d",
+      lectures: [
+        { n: "(1) Osteology", l: "193" }, { n: "(2) Myology", l: "194" },
+        { n: "(3) Diagnosis & Treatment Plan for RPD", l: "195" }, { n: "(4) Mouth Preparation for RPD", l: "196" },
+        { n: "(5) Impression for RPD", l: "197" }, { n: "(6) Secondary Impression for RPD", l: "198" },
+        { n: "(7) Support for Distal Extension base", l: "199" }, { n: "(8) RPD Framework Try In", l: "200" },
+        { n: "(9) Occlusal Relationships for RPD", l: "201" }, { n: "(10) Selection and arrangement of teeth", l: "202" },
+        { n: "(11) RPD Insertion and Recall Visits", l: "203" }, { n: "(12) pre prosthetic surgery", l: "204" },
+        { n: "(13) Diagnosis and treatment for CD", l: "205" }, { n: "(14) Complete Denture Impressions", l: "206" },
+        { n: "(15) Complete Denture Impressions - Part 2", l: "207" }, { n: "(16) Mandibular Movement & Jaw Relation", l: "208" },
+        { n: "(17) vertical jaw relation", l: "209" }, { n: "(18) Horizontal Jaw Relations", l: "210" },
+        { n: "(19) RCD Selection of Artificial Teeth and Try-in", l: "211" }, { n: "(20) Insertion of Complete Dentures", l: "212" },
+        { n: "(21) Post Insertion Problems in Complete Denture", l: "213" }, { n: "(22) Relining and Rebasing", l: "214" },
+        { n: "(23) Esthetic Denture Materials", l: "215" }, { n: "(24) Digital Denture", l: "216" }
+      ]
+    }
+  };
+
+  const main = document.getElementById('mainContent');
+  const tgBase = "https://t.me/alissrasubjects/";
+
+  // Render Logic
+  Object.keys(curriculumData).forEach(subject => {
+    const data = curriculumData[subject];
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.dataset.subject = subject;
+    
+    let lecturesHTML = data.lectures.map(lec => `
+      <li>
+        <a href="${tgBase}${lec.l}" target="_blank" class="lecture-link">
+          <div class="doc-pill">📄</div>
+          <span class="lec-name">${lec.n}</span>
+          <span class="tg-arrow">→</span>
+        </a>
+      </li>
+    `).join('');
+
+    card.innerHTML = `
+      <button class="subject-header">
+        <div class="s-icon" style="background: ${data.color}">${data.icon}</div>
+        <div class="s-info">
+          <div class="s-title">${subject}</div>
+          <div class="s-count">${data.lectures.length} Lectures</div>
+        </div>
+        <span class="chevron">▼</span>
+      </button>
+      <ul class="lecture-list">${lecturesHTML}</ul>
+    `;
+    main.appendChild(card);
+  });
+
+  // Accordion Logic
+  document.querySelectorAll('.subject-header').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.subject-card');
+      const isOpen = card.classList.contains('active');
+      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
+      if (!isOpen) card.classList.add('active');
+    });
+  });
+
+  // Tab Filtering
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.dataset.filter;
+      document.querySelectorAll('.subject-card').forEach(card => {
+        card.classList.toggle('hidden', filter !== 'all' && card.dataset.subject !== filter);
+      });
+    });
+  });
+
+  // Search Logic
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.subject-card').forEach(card => {
+      let match = false;
+      card.querySelectorAll('.lecture-link').forEach(link => {
+        const text = link.textContent.toLowerCase();
+        const isMatch = text.includes(q);
+        link.parentElement.style.display = isMatch ? 'block' : 'none';
+        if (isMatch) match = true;
+      });
+      card.classList.toggle('hidden', !match && q !== '');
+      if (q) card.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
