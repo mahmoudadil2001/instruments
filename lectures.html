@@ -740,6 +740,13 @@
       opacity: 0.9;
     }
 
+    .day-stripe .day-name-small {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 500;
+      font-family: 'Arial', sans-serif;
+    }
+
     .day-stripe .date-val {
       font-size: 0.95rem;
       font-weight: 700;
@@ -828,6 +835,10 @@
 
       .day-stripe .day-name-ar {
         font-size: 0.7rem;
+      }
+
+      .day-stripe .day-name-small {
+        font-size: 0.55rem;
       }
 
       .day-stripe .white-block {
@@ -1381,7 +1392,11 @@
           contentHTML += `<div class="day-name-ar">${arabicDays[dayName] || ''}</div>`;
         } else {
           contentHTML += `<div class="subject-name" style="visibility:hidden">.</div>`;
-          contentHTML += `<div class="day-name-ar" style="visibility:hidden">.</div>`;
+          if (!isToday) {
+            contentHTML += `<div class="day-name-small">${arabicDays[dayName] || ''}</div>`;
+          } else {
+            contentHTML += `<div class="day-name-ar" style="visibility:hidden">.</div>`;
+          }
         }
 
         if (isToday) {
