@@ -284,16 +284,66 @@
       border-top: 1px solid var(--border);
     }
     footer span { color: var(--accent); }
+    .avatar {
+      --border-color: #4255d4;
+      --avatar-size: 34px;
+      height: var(--avatar-size);
+      width: var(--avatar-size);
+      border: 2px solid var(--border-color);
+      padding: 3px;
+      border-radius: 50%;
+      position: relative;
+      display: block;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+    .avatar::before,
+    .avatar::after {
+      content: "";
+      position: absolute;
+      height: 3px;
+      width: 3px;
+      border-radius: 50%;
+      transform: rotate(45deg);
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+    }
+    .avatar::before {
+      box-shadow: 24px 0 0 #4255d4, 17px 17px 0 #4255d4, 0 24px 0 #4255d4, -17px 17px 0 #4255d4, -24px 0 0 #4255d4, -17px -17px 0 #4255d4, 0 -24px 0 #4255d4, 17px -17px 0 #4255d4;
+      animation: animate-2 1.5s ease-in-out infinite;
+    }
+    .avatar::after {
+      box-shadow: 20px 0 0 #4255d4, 18.5px 7.6px 0 #4255d4, 14.1px 14.1px 0 #4255d4, 7.6px 18.5px 0 #4255d4, 0 20px 0 #4255d4, -7.6px 18.5px 0 #4255d4, -14.1px 14.1px 0 #4255d4, -18.5px 7.6px 0 #4255d4, -20px 0 0 #4255d4, -18.5px -7.6px 0 #4255d4, -14.1px -14.1px 0 #4255d4, -7.6px -18.5px 0 #4255d4, 0 -20px 0 #4255d4, 7.6px -18.5px 0 #4255d4, 14.1px -14.1px 0 #4255d4, 18.5px -7.6px 0 #4255d4;
+      transform: rotate(12deg);
+      animation: animate-1 1.5s ease-in-out infinite;
+    }
+    .avatar img {
+      max-width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+    @keyframes animate-1 {
+      0%, 100% { transform: rotate(12deg) scale(1); }
+      50% { transform: rotate(12deg) scale(0.9); }
+    }
+    @keyframes animate-2 {
+      0%, 100% { transform: scale(0.85); }
+      50% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <div class="logo">
-      <div class="logo-mark">🦷</div>
-      dentist <em>Mahmoud adel</em>
-    </div>
+    <a href="developer_info.html" class="avatar">
+      <img src="mahmoud.jpg" alt="Mahmoud Adel">
+    </a>
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Search lectures…" autocomplete="off" />
