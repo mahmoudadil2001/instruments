@@ -774,52 +774,134 @@
       height: 16px;
     }
 
-    .character-icon {
-      width: 35px;
-      height: 60px;
-      margin-bottom: 2px;
+    .character-wrap {
+      position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+      width: 100%;
+    }
+
+    .speech-bubble {
+      position: absolute;
+      bottom: 75px;
+      left: -15px;
+      /* Shifted to start from the character and grow right */
+      background: #fff;
+      color: #0b0f1a;
+      padding: 12px 20px;
+      border-radius: 50px;
+      /* Oval shape */
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.8) translateY(10px);
+      transform-origin: bottom left;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      pointer-events: none;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 30px;
+      /* Align tail with the character icon */
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #fff;
+    }
+
+    .speech-bubble.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    @keyframes char-jump {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-8px) scale(1.05);
+      }
+    }
+
+    .character-icon.animating {
+      animation: char-jump 0.6s ease-in-out infinite;
     }
 
     .exam-road-footer {
-      padding: 15px 0;
+      padding: 18px 12px;
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.15);
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
     }
 
     .next-week-btn {
-      background: #131929;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex: 1;
+      background: linear-gradient(135deg, #1e2538 0%, #131929 100%);
+      border: 1px solid rgba(62, 207, 207, 0.15);
       color: #3ecfcf;
-      padding: 12px 22px;
-      border-radius: 100px;
+      padding: 12px 18px;
+      border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      transition: all 0.25s;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-family: 'Syne', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .next-week-btn:hover {
-      background: #1e2538;
+      background: linear-gradient(135deg, #252e45 0%, #1a2236 100%);
       border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(62, 207, 207, 0.25);
+    }
+
+    .next-week-btn:active {
+      transform: translateY(-1px) scale(0.97);
     }
 
     .next-week-btn span {
-      font-size: 1.1rem;
+      font-size: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    #nextWeek:hover span {
+      transform: translateX(4px);
+    }
+
+    #prevWeek:hover span {
+      transform: translateX(-4px);
     }
 
     @media (max-width: 600px) {
+      .speech-bubble {
+        bottom: 65px;
+        left: -10px;
+        font-size: 0.65rem;
+        padding: 8px 15px;
+      }
+
       .exam-road {
         padding: 40px 8px 20px;
         min-height: 200px;
@@ -1401,11 +1483,14 @@
 
         if (isToday) {
           contentHTML += `
-            <div class="character-icon">
-              <svg viewBox="0 0 30 50" width="30" height="60">
-                <circle cx="15" cy="12" r="9" fill="white"/>
-                <path d="M15 22 L15 38 L8 50 M15 38 L22 50 M15 28 L7 32 M15 28 L23 32" stroke="white" stroke-width="4" stroke-linecap="round"/>
-              </svg>
+            <div class="character-wrap">
+              <div class="speech-bubble" id="speechBubble"></div>
+              <div class="character-icon" id="charIcon">
+                <svg viewBox="0 0 30 50" width="30" height="60">
+                  <circle cx="15" cy="12" r="9" fill="white"/>
+                  <path d="M15 22 L15 38 L8 50 M15 38 L22 50 M15 28 L7 32 M15 28 L23 32" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+              </div>
             </div>
           `;
         } else {
@@ -1431,17 +1516,60 @@
       }
     });
 
+    // Speech Bubble & Countdown Logic
+    function updateSpeechBubble() {
+      const now = new Date();
+      // Find next exam starting at 8:30 AM
+      const nextExam = examSchedule.find(e => {
+        const examTime = new Date(`${e.date}T08:30:00`);
+        return examTime > now;
+      });
+
+      if (!nextExam) return;
+
+      const examTime = new Date(`${nextExam.date}T08:30:00`);
+      const diff = examTime - now;
+
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      const bubble = document.getElementById('speechBubble');
+      if (bubble) {
+        bubble.innerHTML = ` الامتحان الجاي بعد <span style="color:#000">${d} يوم</span> و <span style="color:#000">${h} ساعة</span> و <span style="color:#000">${m} دقيقة</span>`;
+      }
+    }
+
+    // Interval for 7s ON, 7s OFF cycle
+    setInterval(() => {
+      const bubble = document.getElementById('speechBubble');
+      const char = document.getElementById('charIcon');
+
+      if (bubble && char) {
+        updateSpeechBubble();
+        bubble.classList.add('visible');
+        char.classList.add('animating');
+
+        setTimeout(() => {
+          bubble.classList.remove('visible');
+          char.classList.remove('animating');
+        }, 7000);
+      }
+    }, 14000);
+
     // Schedule Accordion Logic
     const schedAccordion = document.getElementById('scheduleAccordion');
     const schedHeader = document.getElementById('scheduleHeader');
     const schedContent = document.getElementById('scheduleContent');
 
-    schedHeader.addEventListener('click', () => {
-      schedAccordion.classList.toggle('active');
-      const isActive = schedAccordion.classList.contains('active');
-      schedHeader.setAttribute('aria-expanded', isActive);
-      schedContent.setAttribute('aria-hidden', !isActive);
-    });
+    if (schedHeader) {
+      schedHeader.addEventListener('click', () => {
+        schedAccordion.classList.toggle('active');
+        const isActive = schedAccordion.classList.contains('active');
+        schedHeader.setAttribute('aria-expanded', isActive);
+        schedContent.setAttribute('aria-hidden', !isActive);
+      });
+    }
 
     renderExamRoad();
   </script>
