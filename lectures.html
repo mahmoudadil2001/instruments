@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>dentisitlogy | Mahmoud Adel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
       --bg: #0b0f1a;
       --surface: #131929;
       --surface2: #1a2236;
-      --border: rgba(99,179,237,0.1);
+      --border: rgba(99, 179, 237, 0.1);
       --accent: #3ecfcf;
       --accent2: #6c8fff;
       --text: #e8f0fe;
       --muted: #7a8caa;
-      --glow: 0 0 32px rgba(62,207,207,0.13);
+      --glow: 0 0 32px rgba(62, 207, 207, 0.13);
       --transDur: 0.3s;
-      --primary: hsl(48,90%,55%);
-      --primaryT: hsla(48,90%,55%,0.5);
-      --primaryT: hsla(48,90%,55%,0.5);
+      --primary: hsl(48, 90%, 55%);
+      --primaryT: hsla(48, 90%, 55%, 0.5);
+      --primaryT: hsla(48, 90%, 55%, 0.5);
     }
 
     /* Light Theme Palette */
@@ -35,8 +38,18 @@
       --glow: 0 0 32px rgba(2, 132, 199, 0.15);
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       transition: background-color 0.3s ease, color 0.3s ease;
     }
@@ -54,8 +67,8 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 50% at 15% 0%, rgba(62,207,207,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(108,143,255,0.06) 0%, transparent 60%);
+        radial-gradient(ellipse 80% 50% at 15% 0%, rgba(62, 207, 207, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(108, 143, 255, 0.06) 0%, transparent 60%);
       pointer-events: none;
       z-index: 0;
     }
@@ -64,7 +77,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(11,15,26,0.88);
+      background: rgba(11, 15, 26, 0.88);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
@@ -84,8 +97,10 @@
     .logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 0.6rem;   /* صغّر الخط */
-      max-width: 120px;    /* يمنع التمدد */
+      font-size: 0.6rem;
+      /* صغّر الخط */
+      max-width: 120px;
+      /* يمنع التمدد */
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -102,9 +117,16 @@
       flex-shrink: 0;
     }
 
-    .logo em { color: var(--accent); font-style: normal; }
+    .logo em {
+      color: var(--accent);
+      font-style: normal;
+    }
 
-    .search-wrap { position: relative; flex-shrink: 0; }
+    .search-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
     .search-wrap input {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -117,7 +139,12 @@
       outline: none;
       transition: border-color 0.2s, width 0.3s;
     }
-    .search-wrap input:focus { border-color: var(--accent); width: 175px; }
+
+    .search-wrap input:focus {
+      border-color: var(--accent);
+      width: 175px;
+    }
+
     .search-icon {
       position: absolute;
       left: 11px;
@@ -139,8 +166,8 @@
 
     .badge {
       display: inline-block;
-      background: rgba(62,207,207,0.09);
-      border: 1px solid rgba(62,207,207,0.22);
+      background: rgba(62, 207, 207, 0.09);
+      border: 1px solid rgba(62, 207, 207, 0.22);
       color: var(--accent);
       font-size: 0.7rem;
       font-weight: 600;
@@ -165,8 +192,10 @@
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-family: 'Arial', sans-serif; /* Cleaner font for numbers */
-      font-size: clamp(3rem, 10vw, 4.5rem); /* Much larger and responsive */
+      font-family: 'Arial', sans-serif;
+      /* Cleaner font for numbers */
+      font-size: clamp(3rem, 10vw, 4.5rem);
+      /* Much larger and responsive */
       font-weight: 900;
       letter-spacing: 2px;
       animation: shineGradient 3s linear infinite;
@@ -176,16 +205,25 @@
     }
 
     @keyframes shineGradient {
-      to { background-position: 200% center; }
+      to {
+        background-position: 200% center;
+      }
     }
 
-    .hero-sub { color: var(--muted); font-size: 0.9rem; max-width: 320px; margin: 0 auto 28px; line-height: 1.6; }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      max-width: 320px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
 
     .stats {
       display: flex;
       justify-content: center;
       gap: 28px;
     }
+
     .stat-num {
       font-family: 'Arial', sans-serif;
       font-size: clamp(2rem, 7vw, 2.5rem);
@@ -198,10 +236,11 @@
       letter-spacing: 1px;
       filter: drop-shadow(0 4px 10px rgba(77, 217, 247, 0.35));
     }
-    .stat-label { 
-      font-size: clamp(0.75rem, 2.5vw, 0.9rem); 
-      color: var(--muted); 
-      margin-top: 6px; 
+
+    .stat-label {
+      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+      color: var(--muted);
+      margin-top: 6px;
       text-transform: uppercase;
       letter-spacing: 1px;
       font-weight: 600;
@@ -214,8 +253,16 @@
       overflow-x: auto;
       scrollbar-width: none;
     }
-    .tabs-outer::-webkit-scrollbar { display: none; }
-    .tabs { display: flex; gap: 7px; width: max-content; }
+
+    .tabs-outer::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 7px;
+      width: max-content;
+    }
 
     .tab {
       background: var(--surface);
@@ -228,7 +275,13 @@
       white-space: nowrap;
       transition: all 0.2s;
     }
-    .tab.active { background: var(--accent); border-color: var(--accent); color: #0b0f1a; font-weight: 600; }
+
+    .tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0b0f1a;
+      font-weight: 600;
+    }
 
     main {
       max-width: 720px;
@@ -236,7 +289,9 @@
       padding: 0 18px 80px;
     }
 
-    .subject-card { margin-bottom: 10px; }
+    .subject-card {
+      margin-bottom: 10px;
+    }
 
     .subject-header {
       width: 100%;
@@ -252,7 +307,10 @@
       color: inherit;
     }
 
-    .subject-header:hover { background: var(--surface2); box-shadow: var(--glow); }
+    .subject-header:hover {
+      background: var(--surface2);
+      box-shadow: var(--glow);
+    }
 
     .subject-card.active .subject-header {
       border-bottom-left-radius: 0;
@@ -271,16 +329,36 @@
       flex-shrink: 0;
     }
 
-    .s-info { flex: 1; min-width: 0; text-align: left; }
-    .s-title { font-family: 'Syne', sans-serif; font-size: 0.97rem; font-weight: 700; }
-    .s-count { font-size: 0.72rem; color: var(--muted); }
+    .s-info {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+    }
 
-    .chevron { color: var(--muted); font-size: 0.75rem; transition: transform 0.3s; }
-    .subject-card.active .chevron { transform: rotate(180deg); }
+    .s-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.97rem;
+      font-weight: 700;
+    }
+
+    .s-count {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .chevron {
+      color: var(--muted);
+      font-size: 0.75rem;
+      transition: transform 0.3s;
+    }
+
+    .subject-card.active .chevron {
+      transform: rotate(180deg);
+    }
 
     .lecture-list {
       background: var(--surface);
-      border: 1px solid rgba(62,207,207,0.18);
+      border: 1px solid rgba(62, 207, 207, 0.18);
       border-top: none;
       border-bottom-left-radius: 14px;
       border-bottom-right-radius: 14px;
@@ -289,7 +367,10 @@
       transition: max-height 0.4s ease-out;
       list-style: none;
     }
-    .subject-card.active .lecture-list { max-height: 3000px; }
+
+    .subject-card.active .lecture-list {
+      max-height: 3000px;
+    }
 
     .lecture-link {
       display: flex;
@@ -302,23 +383,34 @@
       border-bottom: 1px solid var(--border);
       transition: background 0.15s;
     }
-    .lecture-link:hover { background: rgba(62,207,207,0.05); }
+
+    .lecture-link:hover {
+      background: rgba(62, 207, 207, 0.05);
+    }
 
     .doc-pill {
       width: 30px;
       height: 30px;
       border-radius: 8px;
-      background: rgba(62,207,207,0.07);
+      background: rgba(62, 207, 207, 0.07);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.8rem;
     }
 
-    .lec-name { flex: 1; }
-    .tg-arrow { font-size: 0.75rem; color: var(--muted); }
+    .lec-name {
+      flex: 1;
+    }
 
-    .hidden { display: none; }
+    .tg-arrow {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none;
+    }
 
     footer {
       text-align: center;
@@ -327,7 +419,11 @@
       font-size: 0.78rem;
       border-top: 1px solid var(--border);
     }
-    footer span { color: var(--accent); }
+
+    footer span {
+      color: var(--accent);
+    }
+
     .avatar {
       --border-color: #4255d4;
       --avatar-size: 34px;
@@ -341,6 +437,7 @@
       flex-shrink: 0;
       text-decoration: none;
     }
+
     .avatar::before,
     .avatar::after {
       content: "";
@@ -355,15 +452,18 @@
       bottom: 0;
       margin: auto;
     }
+
     .avatar::before {
       box-shadow: 24px 0 0 #4255d4, 17px 17px 0 #4255d4, 0 24px 0 #4255d4, -17px 17px 0 #4255d4, -24px 0 0 #4255d4, -17px -17px 0 #4255d4, 0 -24px 0 #4255d4, 17px -17px 0 #4255d4;
       animation: animate-2 1.5s ease-in-out infinite;
     }
+
     .avatar::after {
       box-shadow: 20px 0 0 #4255d4, 18.5px 7.6px 0 #4255d4, 14.1px 14.1px 0 #4255d4, 7.6px 18.5px 0 #4255d4, 0 20px 0 #4255d4, -7.6px 18.5px 0 #4255d4, -14.1px 14.1px 0 #4255d4, -18.5px 7.6px 0 #4255d4, -20px 0 0 #4255d4, -18.5px -7.6px 0 #4255d4, -14.1px -14.1px 0 #4255d4, -7.6px -18.5px 0 #4255d4, 0 -20px 0 #4255d4, 7.6px -18.5px 0 #4255d4, 14.1px -14.1px 0 #4255d4, 18.5px -7.6px 0 #4255d4;
       transform: rotate(12deg);
       animation: animate-1 1.5s ease-in-out infinite;
     }
+
     .avatar img {
       max-width: 100%;
       height: 100%;
@@ -371,26 +471,44 @@
       border-radius: inherit;
       display: block;
     }
+
     @keyframes animate-1 {
-      0%, 100% { transform: rotate(12deg) scale(1); }
-      50% { transform: rotate(12deg) scale(0.9); }
+
+      0%,
+      100% {
+        transform: rotate(12deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(12deg) scale(0.9);
+      }
     }
+
     @keyframes animate-2 {
-      0%, 100% { transform: scale(0.85); }
-      50% { transform: scale(1); }
+
+      0%,
+      100% {
+        transform: scale(0.85);
+      }
+
+      50% {
+        transform: scale(1);
+      }
     }
 
     /* New Theme Toggle Switch */
     .toggleWrapper {
       display: flex;
       align-items: center;
-      transform: scale(0.45); /* Scale down the button to fit header */
+      transform: scale(0.45);
+      /* Scale down the button to fit header */
       transform-origin: left center;
     }
-    
+
     @media (max-width: 600px) {
       .toggleWrapper {
-        transform: scale(0.35); /* Smaller on mobile */
+        transform: scale(0.35);
+        /* Smaller on mobile */
       }
     }
 
@@ -434,9 +552,26 @@
       border-radius: 100%;
     }
 
-    .toggle__handler .crater--1 { top: 18px; left: 10px; width: 4px; height: 4px; }
-    .toggle__handler .crater--2 { top: 28px; left: 22px; width: 6px; height: 6px; }
-    .toggle__handler .crater--3 { top: 10px; left: 25px; width: 8px; height: 8px; }
+    .toggle__handler .crater--1 {
+      top: 18px;
+      left: 10px;
+      width: 4px;
+      height: 4px;
+    }
+
+    .toggle__handler .crater--2 {
+      top: 28px;
+      left: 22px;
+      width: 6px;
+      height: 6px;
+    }
+
+    .toggle__handler .crater--3 {
+      top: 10px;
+      left: 25px;
+      width: 8px;
+      height: 8px;
+    }
 
     .star {
       position: absolute;
@@ -445,271 +580,594 @@
       border-radius: 50%;
     }
 
-    .star--1 { top: 10px; left: 35px; z-index: 0; width: 30px; height: 3px; }
-    .star--2 { top: 18px; left: 28px; z-index: 1; width: 30px; height: 3px; }
-    .star--3 { top: 27px; left: 40px; z-index: 0; width: 30px; height: 3px; }
-    .star--4, .star--5, .star--6 {
+    .star--1 {
+      top: 10px;
+      left: 35px;
+      z-index: 0;
+      width: 30px;
+      height: 3px;
+    }
+
+    .star--2 {
+      top: 18px;
+      left: 28px;
+      z-index: 1;
+      width: 30px;
+      height: 3px;
+    }
+
+    .star--3 {
+      top: 27px;
+      left: 40px;
+      z-index: 0;
+      width: 30px;
+      height: 3px;
+    }
+
+    .star--4,
+    .star--5,
+    .star--6 {
       opacity: 0;
       transition: all 300ms 0 cubic-bezier(0.445, 0.05, 0.55, 0.95);
     }
-    .star--4 { top: 16px; left: 11px; z-index: 0; width: 2px; height: 2px; transform: translate3d(3px, 0, 0); }
-    .star--5 { top: 32px; left: 17px; z-index: 0; width: 3px; height: 3px; transform: translate3d(3px, 0, 0); }
-    .star--6 { top: 36px; left: 28px; z-index: 0; width: 2px; height: 2px; transform: translate3d(3px, 0, 0); }
 
-    .input:checked + .toggle { background-color: #749dd6; }
-    .input:checked + .toggle .toggle__handler {
+    .star--4 {
+      top: 16px;
+      left: 11px;
+      z-index: 0;
+      width: 2px;
+      height: 2px;
+      transform: translate3d(3px, 0, 0);
+    }
+
+    .star--5 {
+      top: 32px;
+      left: 17px;
+      z-index: 0;
+      width: 3px;
+      height: 3px;
+      transform: translate3d(3px, 0, 0);
+    }
+
+    .star--6 {
+      top: 36px;
+      left: 28px;
+      z-index: 0;
+      width: 2px;
+      height: 2px;
+      transform: translate3d(3px, 0, 0);
+    }
+
+    .input:checked+.toggle {
+      background-color: #749dd6;
+    }
+
+    .input:checked+.toggle .toggle__handler {
       background-color: #ffe5b5;
       transform: translate3d(40px, 0, 0) rotate(0);
     }
-    .input:checked + .toggle .toggle__handler .crater { opacity: 1; }
-    .input:checked + .toggle .star--1 { width: 2px; height: 2px; }
-    .input:checked + .toggle .star--2 { width: 4px; height: 4px; transform: translate3d(-5px, 0, 0); }
-    .input:checked + .toggle .star--3 { width: 2px; height: 2px; transform: translate3d(-7px, 0, 0); }
-    .input:checked + .toggle .star--4,
-    .input:checked + .toggle .star--5,
-    .input:checked + .toggle .star--6 {
+
+    .input:checked+.toggle .toggle__handler .crater {
+      opacity: 1;
+    }
+
+    .input:checked+.toggle .star--1 {
+      width: 2px;
+      height: 2px;
+    }
+
+    .input:checked+.toggle .star--2 {
+      width: 4px;
+      height: 4px;
+      transform: translate3d(-5px, 0, 0);
+    }
+
+    .input:checked+.toggle .star--3 {
+      width: 2px;
+      height: 2px;
+      transform: translate3d(-7px, 0, 0);
+    }
+
+    .input:checked+.toggle .star--4,
+    .input:checked+.toggle .star--5,
+    .input:checked+.toggle .star--6 {
       opacity: 1;
       transform: translate3d(0, 0, 0);
     }
-    .input:checked + .toggle .star--4 { transition: all 300ms 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-    .input:checked + .toggle .star--5 { transition: all 300ms 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-    .input:checked + .toggle .star--6 { transition: all 300ms 400ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
+
+    .input:checked+.toggle .star--4 {
+      transition: all 300ms 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    }
+
+    .input:checked+.toggle .star--5 {
+      transition: all 300ms 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    }
+
+    .input:checked+.toggle .star--6 {
+      transition: all 300ms 400ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    }
+
+    /* Exam Road Styles - Premium Font and Colors */
+    .exam-road-container {
+      margin: 40px auto 20px;
+      max-width: 100%;
+      background: transparent;
+      position: relative;
+    }
+
+    .exam-road {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      background: linear-gradient(180deg, #131929 0%, #0b0f1a 100%);
+      padding: 45px 12px 25px;
+      min-height: 220px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      gap: 4px;
+    }
+
+    .day-stripe {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      position: relative;
+      min-width: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .day-stripe .subject-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--exam-color, #fff);
+      font-family: 'Syne', sans-serif;
+      text-align: center;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+      max-width: 100%;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .day-stripe .day-name-ar {
+      font-size: 0.8rem;
+      color: #fff;
+      font-weight: 600;
+      font-family: 'Arial', sans-serif;
+      opacity: 0.9;
+    }
+
+    .day-stripe .date-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      font-family: 'Syne', sans-serif;
+      line-height: 1;
+      letter-spacing: 0;
+      margin-bottom: 2px;
+    }
+
+    .day-stripe .white-block {
+      width: 100%;
+      max-width: 45px;
+      height: 12px;
+      background: var(--exam-color, #fff);
+      border-radius: 2px;
+      transition: all 0.3s;
+      opacity: 0.8;
+    }
+
+    .day-stripe.today .white-block {
+      background: #c2f5ff;
+      box-shadow: 0 0 20px rgba(194, 245, 255, 0.6);
+      opacity: 1;
+      height: 16px;
+    }
+
+    .character-icon {
+      width: 35px;
+      height: 60px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+    }
+
+    .exam-road-footer {
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .next-week-btn {
+      background: #131929;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #3ecfcf;
+      padding: 12px 22px;
+      border-radius: 100px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      font-family: 'Syne', sans-serif;
+    }
+
+    .next-week-btn:hover {
+      background: #1e2538;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .next-week-btn span {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 600px) {
+      .exam-road {
+        padding: 40px 8px 20px;
+        min-height: 200px;
+      }
+
+      .day-stripe .date-val {
+        font-size: 0.85rem;
+      }
+
+      .day-stripe .subject-name {
+        font-size: 0.72rem;
+      }
+
+      .day-stripe .day-name-ar {
+        font-size: 0.7rem;
+      }
+
+      .day-stripe .white-block {
+        height: 10px;
+        max-width: 35px;
+      }
+
+      .character-icon {
+        height: 50px;
+        width: 30px;
+      }
+    }
+
+    /* Schedule Accordion Styles */
+    .schedule-accordion {
+      margin: 20px auto 30px;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .schedule-header {
+      width: 100%;
+      padding: 16px 22px;
+      background: rgba(62, 207, 207, 0.05);
+      border: none;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .schedule-header:hover {
+      background: rgba(62, 207, 207, 0.12);
+    }
+
+    .schedule-header .chevron-icon {
+      font-size: 0.75rem;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--accent);
+    }
+
+    .schedule-accordion.active .chevron-icon {
+      transform: rotate(180deg);
+    }
+
+    .schedule-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    }
+
+    .schedule-accordion.active {
+      border-color: rgba(62, 207, 207, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .schedule-accordion.active .schedule-content {
+      max-height: 1200px;
+      transition: max-height 0.8s ease-in-out;
+    }
   </style>
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <div style="display: flex; gap: 15px; align-items: center;">
-      <a href="developer_info.html" class="avatar">
-        <img src="mahmoud.jpg" alt="Mahmoud Adel">
-      </a>
-      <div class="toggleWrapper">
-        <input class="input" id="theme" type="checkbox" name="theme" value="light" />
-        <label class="toggle" for="theme">
-          <span class="toggle__handler">
-            <span class="crater crater--1"></span>
-            <span class="crater crater--2"></span>
-            <span class="crater crater--3"></span>
-          </span>
-          <span class="star star--1"></span>
-          <span class="star star--2"></span>
-          <span class="star star--3"></span>
-          <span class="star star--4"></span>
-          <span class="star star--5"></span>
-          <span class="star star--6"></span>
-        </label>
+  <header>
+    <div class="header-inner">
+      <div style="display: flex; gap: 15px; align-items: center;">
+        <a href="developer_info.html" class="avatar">
+          <img src="mahmoud.jpg" alt="Mahmoud Adel">
+        </a>
+        <div class="toggleWrapper">
+          <input class="input" id="theme" type="checkbox" name="theme" value="light" />
+          <label class="toggle" for="theme">
+            <span class="toggle__handler">
+              <span class="crater crater--1"></span>
+              <span class="crater crater--2"></span>
+              <span class="crater crater--3"></span>
+            </span>
+            <span class="star star--1"></span>
+            <span class="star star--2"></span>
+            <span class="star star--3"></span>
+            <span class="star star--4"></span>
+            <span class="star star--5"></span>
+            <span class="star star--6"></span>
+          </label>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search lectures…" autocomplete="off" />
       </div>
     </div>
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Search lectures…" autocomplete="off" />
+  </header>
+
+  <section class="hero">
+    <div class="badge">جامعة الاسراء</div>
+    <h1>ملازم النظري<br><span class="gr">2026</span></h1>
+
+    <!-- Schedule Accordion Wrapper -->
+    <div class="schedule-accordion" id="scheduleAccordion">
+      <button class="schedule-header" id="scheduleHeader" aria-expanded="false" aria-controls="scheduleContent">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.2rem;">📅</span>
+          <span>جدول الفاينل</span>
+        </div>
+        <span class="chevron-icon">▼</span>
+      </button>
+
+      <div class="schedule-content" id="scheduleContent" aria-hidden="true">
+        <!-- Exam Road Component -->
+        <div class="exam-road-container">
+          <div class="exam-road" id="examRoad">
+            <!-- JS generated content -->
+          </div>
+          <div class="exam-road-footer">
+            <button id="prevWeek" class="next-week-btn" style="visibility: hidden;">
+              <span>←</span> Previous Week
+            </button>
+            <button id="nextWeek" class="next-week-btn">
+              Next Week <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="hero-sub">Direct access to Al-Esraa University study materials via Telegram.</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-num">10</span>
+        <div class="stat-label">Subjects</div>
+      </div>
+      <div class="stat"><span class="stat-num">200+</span>
+        <div class="stat-label">Lectures</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tabs-outer">
+    <div class="tabs">
+      <button class="tab active" data-filter="all">All Subjects</button>
+      <button class="tab" data-filter="Endodontics">Endodontics</button>
+      <button class="tab" data-filter="General Medicine">Medicine</button>
+      <button class="tab" data-filter="General Surgery">Surgery</button>
+      <button class="tab" data-filter="Operative">Operative</button>
+      <button class="tab" data-filter="Oral Pathology">Oral Path</button>
+      <button class="tab" data-filter="Oral Surgery">Oral Surg</button>
+      <button class="tab" data-filter="Orthodontics">Ortho</button>
+      <button class="tab" data-filter="Pedodontics">Pedo</button>
+      <button class="tab" data-filter="Periodontics">Perio</button>
+      <button class="tab" data-filter="Prosthodontics">Pros</button>
     </div>
   </div>
-</header>
 
-<section class="hero">
-  <div class="badge">جامعة الاسراء</div>
-  <h1>ملازم النظري<br><span class="gr">2026</span></h1>
-  <p class="hero-sub">Direct access to Al-Esraa University study materials via Telegram.</p>
-  <div class="stats">
-    <div class="stat"><span class="stat-num">10</span><div class="stat-label">Subjects</div></div>
-    <div class="stat"><span class="stat-num">200+</span><div class="stat-label">Lectures</div></div>
-  </div>
-</section>
-
-<div class="tabs-outer">
-  <div class="tabs">
-    <button class="tab active" data-filter="all">All Subjects</button>
-    <button class="tab" data-filter="Endodontics">Endodontics</button>
-    <button class="tab" data-filter="General Medicine">Medicine</button>
-    <button class="tab" data-filter="General Surgery">Surgery</button>
-    <button class="tab" data-filter="Operative">Operative</button>
-    <button class="tab" data-filter="Oral Pathology">Oral Path</button>
-    <button class="tab" data-filter="Oral Surgery">Oral Surg</button>
-    <button class="tab" data-filter="Orthodontics">Ortho</button>
-    <button class="tab" data-filter="Pedodontics">Pedo</button>
-    <button class="tab" data-filter="Periodontics">Perio</button>
-    <button class="tab" data-filter="Prosthodontics">Pros</button>
-  </div>
-</div>
-
-<main id="mainContent">
+  <main id="mainContent">
   </main>
 
-<footer>
-  &copy; 2026 <span>Dentisitlogy</span> • Mahmoud Adel Jawhar
-</footer>
+  <footer>
+    &copy; 2026 <span>Dentisitlogy</span> • Mahmoud Adel Jawhar
+  </footer>
 
-<script>
-  const curriculumData = {
-    "Endodontics": {
-      icon: "🦷", color: "#0d2626",
-      lectures: [
-        { n: "(0) rubber dam", l: "4" },
-        { n: "(1) Introduction and Scope", l: "5" },
-        { n: "(2) Classification of periapical disease", l: "6" },
-        { n: "(3) Access Opening Preparation", l: "7" },
-        { n: "(3) access opening", l: "8" },
-        { n: "(4) working length determination", l: "9" },
-        { n: "(5) Clean&Shap of Root Canal", l: "10" },
-        { n: "(6) Clean&Shap of Root Canal 2", l: "11" },
-        { n: "(7) Root Canal Obturation", l: "12" }
-      ]
-    },
-    "General Medicine": {
-      icon: "🩺", color: "#0d1a2d",
-      lectures: [
-        { n: "(1) Diabetes Mellitus", l: "15" }, { n: "(2) managment of DM", l: "16" },
-        { n: "(3) WBC Disorders part 1", l: "17" }, { n: "(4) WBC disorders part 2", l: "18" },
-        { n: "(5) bleeding disorders", l: "19" }, { n: "(6) adrenal glands 1", l: "20" },
-        { n: "(7) adrenal glands 2", l: "21" }, { n: "(8) Gastrointestinal Diseases", l: "22" },
-        { n: "(9) Gastrointestinal Diseases 2", l: "23" }, { n: "(10) Inflammatory Bowel Disease 1", l: "24" },
-        { n: "(11) Inflammatory Bowel Disease 2", l: "25" }, { n: "(12) Pseudomembranous Colitis", l: "26" },
-        { n: "(13) Peptic Ulcer 1", l: "27" }, { n: "(14) Peptic Ulcer 2", l: "28" },
-        { n: "(15) heart failure", l: "29" }, { n: "(16) CVS Arrythmias", l: "30" },
-        { n: "(17) hypertension", l: "31" }, { n: "(18) ischemic heart diseases", l: "32" },
-        { n: "(19) infective endocarditis", l: "33" }, { n: "(20) imunologic disorders", l: "34" },
-        { n: "(21) thyroid gland", l: "35" }, { n: "(22) Anxiety and Eating Disorders", l: "36" },
-        { n: "(23) Psychological Disturbance", l: "37" }, { n: "(24) liver disease", l: "38" },
-        { n: "(25) drug & alcohol abuse", l: "39" }
-      ]
-    },
-    "General Surgery": {
-      icon: "🔬", color: "#1a0d0d",
-      lectures: [
-        { n: "(1) Metabolic response to injury", l: "41" }, { n: "(2) Wounds healing", l: "42" },
-        { n: "(3) Surgical wounds and infections", l: "43" }, { n: "(4) Hemorrhage and blood transfusion", l: "44" },
-        { n: "(5) Shock", l: "45" }, { n: "(6) Parenteral nutrition", l: "46" },
-        { n: "(7) Fluid balance", l: "47" }, { n: "(8) Head injuries and multiple trauma", l: "48" },
-        { n: "(9) Post operative care", l: "49" }, { n: "(10) anesthesia", l: "50" },
-        { n: "(11) Day case surgery", l: "51" }, { n: "(12) Patient safety", l: "52" },
-        { n: "(13) Medical ethics", l: "53" }
-      ]
-    },
-    "Operative": {
-      icon: "⚙️", color: "#0d1a0d",
-      lectures: [
-        { n: "(1) Assessment, Diagnosis, Treatment Planning", l: "56" }, { n: "(2) Assessment, Diagnosis, Treatment Planning 2", l: "57" },
-        { n: "(3) Biologic Consideration of Enamel", l: "58" }, { n: "(4) Biologic Consideration of Dentin 1", l: "59" },
-        { n: "(5) Biologic Consideration of Dentin 2", l: "60" }, { n: "(6) Dental caries", l: "61" },
-        { n: "(7) Pulp Irritants and inflammatory conditions", l: "62" }, { n: "(8) pulp health RD", l: "63" },
-        { n: "(9) Deep-Seated Carious lesions", l: "64" }, { n: "(10) Caries Diagnosis and treatment", l: "65" },
-        { n: "(11) Cervical Lesions", l: "66" }, { n: "(12) Composite (Direct tooth-colored restorations)", l: "67" },
-        { n: "(13) Inlays and Onlays (Indirect adhesive)", l: "68" }, { n: "(14) Inlays and Onlays 2", l: "69" },
-        { n: "(15) inlays and onlays (Ceramic veneers) 3", l: "70" }, { n: "(16) composite inlays and onlays restoration", l: "71" },
-        { n: "(17) Dental Laser", l: "72" }, { n: "(18) Dental laser 2", l: "73" },
-        { n: "(19) Fluoride Releasing Materials", l: "74" }, { n: "(20) CAD CAM Techniques", l: "75" }
-      ]
-    },
-    "Oral Pathology": {
-      icon: "🔭", color: "#1a0d1a",
-      lectures: [
-        { n: "(1) Biopsy (Principles and techniques)", l: "78" }, { n: "(2) Dental caries", l: "79" },
-        { n: "(3) Disorders of dental pulp", l: "80" }, { n: "(4) Periapical Pathology", l: "81" },
-        { n: "(5) inflammatory diseases of bone", l: "82" }, { n: "(6) Fibro osseous Lesions", l: "83" },
-        { n: "(7) Giant cell lesions", l: "84" }, { n: "(8) Metabolic and Genetic diseases of bone", l: "85" },
-        { n: "(9) bone neoplasms", l: "86" }, { n: "(10) malignant Bone tumors", l: "87" },
-        { n: "(11) odontogenic cysts", l: "88" }, { n: "(12) Odontogenic tumor", l: "89" },
-        { n: "(13) developmental defects 1", l: "90" }, { n: "(14) developmental defects 2", l: "91" },
-        { n: "(15) Oral mucosal lesions", l: "92" }, { n: "(16) Immune-Mediated disorders", l: "93" },
-        { n: "(17) Vesiculobullous lesions of oral cavity", l: "94" }, { n: "(18) Epithelial Pathology", l: "95" }
-      ]
-    },
-    "Oral Surgery": {
-      icon: "🩻", color: "#1a1a0d",
-      lectures: [
-        { n: "(1) Hypertension", l: "98" }, { n: "(2) Heart failure", l: "99" },
-        { n: "(3) Infective Endocarditis", l: "100" }, { n: "(4) Diabetes mellitus", l: "101" },
-        { n: "(5) Adrenal Insufficiency", l: "102" }, { n: "(6) Thyroid diseases", l: "103" },
-        { n: "(7) Chronic Renal Diseases", l: "104" }, { n: "(8) Bleeding disorder", l: "105" },
-        { n: "(9) Blood Dyscrasia", l: "106" }, { n: "(10) liver disease", l: "107" },
-        { n: "(11) CNS Diseases", l: "108" }, { n: "(12) Allergy", l: "109" },
-        { n: "(13) Radio and chmotherapy patients", l: "110" }, { n: "(14) Pulmonary diseases", l: "111" },
-        { n: "(15) AIDS", l: "112" }, { n: "(16) Rheumatologic and CT disorders", l: "113" },
-        { n: "(17) pregnancy", l: "114" }, { n: "(18) Odontogenic spaces P.1", l: "115" },
-        { n: "(18) Odontogenic spaces P.2", l: "116" }, { n: "(19) Complication of extraction", l: "117" },
-        { n: "(20) Principles of Flaps, Suturing", l: "118" }, { n: "(21) Osteomyelitis", l: "119" },
-        { n: "(22) Impacted Teeth P.1", l: "120" }, { n: "(22) Impacted Teeth P.2", l: "121" },
-        { n: "(22) impacted teeth P.3&4", l: "122" }, { n: "(23) Dental implant introduction", l: "123" },
-        { n: "(23) dental implant P.1", l: "124" }, { n: "(23) Dental implant P.2", l: "125" },
-        { n: "(23) dental implant P.3", l: "126" }, { n: "(23) dental implant P.4", l: "127" },
-        { n: "(24) Endodontic surgery P.1", l: "128" }, { n: "(24) Endodontic surgery P.2", l: "129" }
-      ]
-    },
-    "Orthodontics": {
-      icon: "📐", color: "#0d0d2a",
-      lectures: [
-        { n: "(0) Genetic Factors of Malocclusion", l: "132" }, { n: "(1) introduction", l: "133" },
-        { n: "(2) Andrew keys of Normal occlusion", l: "134" }, { n: "(3) Iatrogenic effect of orthodontic treatment", l: "135" },
-        { n: "(4) Classification of malocclusion", l: "136" }, { n: "(5) Etiology of malocclusion", l: "137" },
-        { n: "(6) G&D introduction", l: "138" }, { n: "(7) G&D Growth pattern, timing, variability", l: "139" },
-        { n: "(8) G&D Craniofacial Growth", l: "140" }, { n: "(9) G&D Development of Dentition& Occlusion", l: "141" },
-        { n: "(10) G&D Development of Dentition& Occlusion 2", l: "142" }, { n: "(11) tooth movement", l: "143" },
-        { n: "(12) local factors affect the occlusion", l: "144" }, { n: "(13) Biomechanical Concepts of Tooth Movements", l: "145" },
-        { n: "(14) Anchorage in Orthodontics", l: "146" }, { n: "(15) Orthodontic Appliances", l: "147" },
-        { n: "(16) Removable Orthodontic Appliances", l: "148" }, { n: "(17) orthopedic appliances", l: "149" },
-        { n: "(18) functional appliances", l: "150" }, { n: "(19) Fixed Orthodontic Appliance", l: "151" },
-        { n: "(20) Retention", l: "152" }, { n: "(21) Retainers", l: "153" }
-      ]
-    },
-    "Pedodontics": {
-      icon: "🧒", color: "#1a0d1a",
-      lectures: [
-        { n: "(1) Eruption of teeth", l: "156" }, { n: "(2) teeth numbering system", l: "157" },
-        { n: "(3) Dental caries", l: "158" }, { n: "(4) rampant caries", l: "159" },
-        { n: "(5) Morphology of primary teeth 1", l: "160" }, { n: "(6) Morphology of primary teeth 2", l: "161" },
-        { n: "(7) morphology differences primary&permenent", l: "162" }, { n: "(8) Epstein pearls, bohn nodules, dental lamina cysts", l: "163" },
-        { n: "(9) causes of delayed teeth eruption", l: "164" }, { n: "(10) Deep carious lesion treatment", l: "165" },
-        { n: "(11) Restorative materials in pedodontic", l: "166" }, { n: "(12) pulp treatment", l: "167" },
-        { n: "(13) Local anesthesia and pain control", l: "168" }
-      ]
-    },
-    "Periodontics": {
-      icon: "🦠", color: "#0d1a1a",
-      lectures: [
-        { n: "(1) Terms in periodontology", l: "171" }, { n: "(2) Periodontal ligament (PDL)", l: "172" },
-        { n: "(3) Cementum", l: "173" }, { n: "(4) Alveolar process (AP)", l: "174" },
-        { n: "(5) Classification of periodontal diseases 1", l: "175" }, { n: "(6) Classification of periodontal diseases 2", l: "176" },
-        { n: "(7) pathogenesis of periodontal disease", l: "177" }, { n: "(8) dental plaque biofilm", l: "178" },
-        { n: "(9) Microbiologic Specificity", l: "179" }, { n: "(10) Dental Calculus", l: "180" },
-        { n: "(11) dental stain", l: "181" }, { n: "(12) risk factors", l: "182" },
-        { n: "(13) Smoking and periodontal diseases", l: "183" }, { n: "(14) Treatment planning of Periodontal Diseases", l: "184" },
-        { n: "(15) Phase II Surgical Therapy", l: "185" }, { n: "(16) Periodontal instruments", l: "186" },
-        { n: "(17) Periodontal indices", l: "187" }, { n: "(18) Gingival and periodontal pocket", l: "188" },
-        { n: "(19) chemotherapy (systemic antibiotic)", l: "189" }, { n: "(20) Oral halitosis", l: "190" }
-      ]
-    },
-    "Prosthodontics": {
-      icon: "🦷", color: "#1a1a0d",
-      lectures: [
-        { n: "(1) Osteology", l: "193" }, { n: "(2) Myology", l: "194" },
-        { n: "(3) Diagnosis & Treatment Plan for RPD", l: "195" }, { n: "(4) Mouth Preparation for RPD", l: "196" },
-        { n: "(5) Impression for RPD", l: "197" }, { n: "(6) Secondary Impression for RPD", l: "198" },
-        { n: "(7) Support for Distal Extension base", l: "199" }, { n: "(8) RPD Framework Try In", l: "200" },
-        { n: "(9) Occlusal Relationships for RPD", l: "201" }, { n: "(10) Selection and arrangement of teeth", l: "202" },
-        { n: "(11) RPD Insertion and Recall Visits", l: "203" }, { n: "(12) pre prosthetic surgery", l: "204" },
-        { n: "(13) Diagnosis and treatment for CD", l: "205" }, { n: "(14) Complete Denture Impressions", l: "206" },
-        { n: "(15) Complete Denture Impressions - Part 2", l: "207" }, { n: "(16) Mandibular Movement & Jaw Relation", l: "208" },
-        { n: "(17) vertical jaw relation", l: "209" }, { n: "(18) Horizontal Jaw Relations", l: "210" },
-        { n: "(19) RCD Selection of Artificial Teeth and Try-in", l: "211" }, { n: "(20) Insertion of Complete Dentures", l: "212" },
-        { n: "(21) Post Insertion Problems in Complete Denture", l: "213" }, { n: "(22) Relining and Rebasing", l: "214" },
-        { n: "(23) Esthetic Denture Materials", l: "215" }, { n: "(24) Digital Denture", l: "216" }
-      ]
-    }
-  };
+  <script>
+    const curriculumData = {
+      "Endodontics": {
+        icon: "🦷", color: "#0d2626",
+        lectures: [
+          { n: "(0) rubber dam", l: "4" },
+          { n: "(1) Introduction and Scope", l: "5" },
+          { n: "(2) Classification of periapical disease", l: "6" },
+          { n: "(3) Access Opening Preparation", l: "7" },
+          { n: "(3) access opening", l: "8" },
+          { n: "(4) working length determination", l: "9" },
+          { n: "(5) Clean&Shap of Root Canal", l: "10" },
+          { n: "(6) Clean&Shap of Root Canal 2", l: "11" },
+          { n: "(7) Root Canal Obturation", l: "12" }
+        ]
+      },
+      "General Medicine": {
+        icon: "🩺", color: "#0d1a2d",
+        lectures: [
+          { n: "(1) Diabetes Mellitus", l: "15" }, { n: "(2) managment of DM", l: "16" },
+          { n: "(3) WBC Disorders part 1", l: "17" }, { n: "(4) WBC disorders part 2", l: "18" },
+          { n: "(5) bleeding disorders", l: "19" }, { n: "(6) adrenal glands 1", l: "20" },
+          { n: "(7) adrenal glands 2", l: "21" }, { n: "(8) Gastrointestinal Diseases", l: "22" },
+          { n: "(9) Gastrointestinal Diseases 2", l: "23" }, { n: "(10) Inflammatory Bowel Disease 1", l: "24" },
+          { n: "(11) Inflammatory Bowel Disease 2", l: "25" }, { n: "(12) Pseudomembranous Colitis", l: "26" },
+          { n: "(13) Peptic Ulcer 1", l: "27" }, { n: "(14) Peptic Ulcer 2", l: "28" },
+          { n: "(15) heart failure", l: "29" }, { n: "(16) CVS Arrythmias", l: "30" },
+          { n: "(17) hypertension", l: "31" }, { n: "(18) ischemic heart diseases", l: "32" },
+          { n: "(19) infective endocarditis", l: "33" }, { n: "(20) imunologic disorders", l: "34" },
+          { n: "(21) thyroid gland", l: "35" }, { n: "(22) Anxiety and Eating Disorders", l: "36" },
+          { n: "(23) Psychological Disturbance", l: "37" }, { n: "(24) liver disease", l: "38" },
+          { n: "(25) drug & alcohol abuse", l: "39" }
+        ]
+      },
+      "General Surgery": {
+        icon: "🔬", color: "#1a0d0d",
+        lectures: [
+          { n: "(1) Metabolic response to injury", l: "41" }, { n: "(2) Wounds healing", l: "42" },
+          { n: "(3) Surgical wounds and infections", l: "43" }, { n: "(4) Hemorrhage and blood transfusion", l: "44" },
+          { n: "(5) Shock", l: "45" }, { n: "(6) Parenteral nutrition", l: "46" },
+          { n: "(7) Fluid balance", l: "47" }, { n: "(8) Head injuries and multiple trauma", l: "48" },
+          { n: "(9) Post operative care", l: "49" }, { n: "(10) anesthesia", l: "50" },
+          { n: "(11) Day case surgery", l: "51" }, { n: "(12) Patient safety", l: "52" },
+          { n: "(13) Medical ethics", l: "53" }
+        ]
+      },
+      "Operative": {
+        icon: "⚙️", color: "#0d1a0d",
+        lectures: [
+          { n: "(1) Assessment, Diagnosis, Treatment Planning", l: "56" }, { n: "(2) Assessment, Diagnosis, Treatment Planning 2", l: "57" },
+          { n: "(3) Biologic Consideration of Enamel", l: "58" }, { n: "(4) Biologic Consideration of Dentin 1", l: "59" },
+          { n: "(5) Biologic Consideration of Dentin 2", l: "60" }, { n: "(6) Dental caries", l: "61" },
+          { n: "(7) Pulp Irritants and inflammatory conditions", l: "62" }, { n: "(8) pulp health RD", l: "63" },
+          { n: "(9) Deep-Seated Carious lesions", l: "64" }, { n: "(10) Caries Diagnosis and treatment", l: "65" },
+          { n: "(11) Cervical Lesions", l: "66" }, { n: "(12) Composite (Direct tooth-colored restorations)", l: "67" },
+          { n: "(13) Inlays and Onlays (Indirect adhesive)", l: "68" }, { n: "(14) Inlays and Onlays 2", l: "69" },
+          { n: "(15) inlays and onlays (Ceramic veneers) 3", l: "70" }, { n: "(16) composite inlays and onlays restoration", l: "71" },
+          { n: "(17) Dental Laser", l: "72" }, { n: "(18) Dental laser 2", l: "73" },
+          { n: "(19) Fluoride Releasing Materials", l: "74" }, { n: "(20) CAD CAM Techniques", l: "75" }
+        ]
+      },
+      "Oral Pathology": {
+        icon: "🔭", color: "#1a0d1a",
+        lectures: [
+          { n: "(1) Biopsy (Principles and techniques)", l: "78" }, { n: "(2) Dental caries", l: "79" },
+          { n: "(3) Disorders of dental pulp", l: "80" }, { n: "(4) Periapical Pathology", l: "81" },
+          { n: "(5) inflammatory diseases of bone", l: "82" }, { n: "(6) Fibro osseous Lesions", l: "83" },
+          { n: "(7) Giant cell lesions", l: "84" }, { n: "(8) Metabolic and Genetic diseases of bone", l: "85" },
+          { n: "(9) bone neoplasms", l: "86" }, { n: "(10) malignant Bone tumors", l: "87" },
+          { n: "(11) odontogenic cysts", l: "88" }, { n: "(12) Odontogenic tumor", l: "89" },
+          { n: "(13) developmental defects 1", l: "90" }, { n: "(14) developmental defects 2", l: "91" },
+          { n: "(15) Oral mucosal lesions", l: "92" }, { n: "(16) Immune-Mediated disorders", l: "93" },
+          { n: "(17) Vesiculobullous lesions of oral cavity", l: "94" }, { n: "(18) Epithelial Pathology", l: "95" }
+        ]
+      },
+      "Oral Surgery": {
+        icon: "🩻", color: "#1a1a0d",
+        lectures: [
+          { n: "(1) Hypertension", l: "98" }, { n: "(2) Heart failure", l: "99" },
+          { n: "(3) Infective Endocarditis", l: "100" }, { n: "(4) Diabetes mellitus", l: "101" },
+          { n: "(5) Adrenal Insufficiency", l: "102" }, { n: "(6) Thyroid diseases", l: "103" },
+          { n: "(7) Chronic Renal Diseases", l: "104" }, { n: "(8) Bleeding disorder", l: "105" },
+          { n: "(9) Blood Dyscrasia", l: "106" }, { n: "(10) liver disease", l: "107" },
+          { n: "(11) CNS Diseases", l: "108" }, { n: "(12) Allergy", l: "109" },
+          { n: "(13) Radio and chmotherapy patients", l: "110" }, { n: "(14) Pulmonary diseases", l: "111" },
+          { n: "(15) AIDS", l: "112" }, { n: "(16) Rheumatologic and CT disorders", l: "113" },
+          { n: "(17) pregnancy", l: "114" }, { n: "(18) Odontogenic spaces P.1", l: "115" },
+          { n: "(18) Odontogenic spaces P.2", l: "116" }, { n: "(19) Complication of extraction", l: "117" },
+          { n: "(20) Principles of Flaps, Suturing", l: "118" }, { n: "(21) Osteomyelitis", l: "119" },
+          { n: "(22) Impacted Teeth P.1", l: "120" }, { n: "(22) Impacted Teeth P.2", l: "121" },
+          { n: "(22) impacted teeth P.3&4", l: "122" }, { n: "(23) Dental implant introduction", l: "123" },
+          { n: "(23) dental implant P.1", l: "124" }, { n: "(23) Dental implant P.2", l: "125" },
+          { n: "(23) dental implant P.3", l: "126" }, { n: "(23) dental implant P.4", l: "127" },
+          { n: "(24) Endodontic surgery P.1", l: "128" }, { n: "(24) Endodontic surgery P.2", l: "129" }
+        ]
+      },
+      "Orthodontics": {
+        icon: "📐", color: "#0d0d2a",
+        lectures: [
+          { n: "(0) Genetic Factors of Malocclusion", l: "132" }, { n: "(1) introduction", l: "133" },
+          { n: "(2) Andrew keys of Normal occlusion", l: "134" }, { n: "(3) Iatrogenic effect of orthodontic treatment", l: "135" },
+          { n: "(4) Classification of malocclusion", l: "136" }, { n: "(5) Etiology of malocclusion", l: "137" },
+          { n: "(6) G&D introduction", l: "138" }, { n: "(7) G&D Growth pattern, timing, variability", l: "139" },
+          { n: "(8) G&D Craniofacial Growth", l: "140" }, { n: "(9) G&D Development of Dentition& Occlusion", l: "141" },
+          { n: "(10) G&D Development of Dentition& Occlusion 2", l: "142" }, { n: "(11) tooth movement", l: "143" },
+          { n: "(12) local factors affect the occlusion", l: "144" }, { n: "(13) Biomechanical Concepts of Tooth Movements", l: "145" },
+          { n: "(14) Anchorage in Orthodontics", l: "146" }, { n: "(15) Orthodontic Appliances", l: "147" },
+          { n: "(16) Removable Orthodontic Appliances", l: "148" }, { n: "(17) orthopedic appliances", l: "149" },
+          { n: "(18) functional appliances", l: "150" }, { n: "(19) Fixed Orthodontic Appliance", l: "151" },
+          { n: "(20) Retention", l: "152" }, { n: "(21) Retainers", l: "153" }
+        ]
+      },
+      "Pedodontics": {
+        icon: "🧒", color: "#1a0d1a",
+        lectures: [
+          { n: "(1) Eruption of teeth", l: "156" }, { n: "(2) teeth numbering system", l: "157" },
+          { n: "(3) Dental caries", l: "158" }, { n: "(4) rampant caries", l: "159" },
+          { n: "(5) Morphology of primary teeth 1", l: "160" }, { n: "(6) Morphology of primary teeth 2", l: "161" },
+          { n: "(7) morphology differences primary&permenent", l: "162" }, { n: "(8) Epstein pearls, bohn nodules, dental lamina cysts", l: "163" },
+          { n: "(9) causes of delayed teeth eruption", l: "164" }, { n: "(10) Deep carious lesion treatment", l: "165" },
+          { n: "(11) Restorative materials in pedodontic", l: "166" }, { n: "(12) pulp treatment", l: "167" },
+          { n: "(13) Local anesthesia and pain control", l: "168" }
+        ]
+      },
+      "Periodontics": {
+        icon: "🦠", color: "#0d1a1a",
+        lectures: [
+          { n: "(1) Terms in periodontology", l: "171" }, { n: "(2) Periodontal ligament (PDL)", l: "172" },
+          { n: "(3) Cementum", l: "173" }, { n: "(4) Alveolar process (AP)", l: "174" },
+          { n: "(5) Classification of periodontal diseases 1", l: "175" }, { n: "(6) Classification of periodontal diseases 2", l: "176" },
+          { n: "(7) pathogenesis of periodontal disease", l: "177" }, { n: "(8) dental plaque biofilm", l: "178" },
+          { n: "(9) Microbiologic Specificity", l: "179" }, { n: "(10) Dental Calculus", l: "180" },
+          { n: "(11) dental stain", l: "181" }, { n: "(12) risk factors", l: "182" },
+          { n: "(13) Smoking and periodontal diseases", l: "183" }, { n: "(14) Treatment planning of Periodontal Diseases", l: "184" },
+          { n: "(15) Phase II Surgical Therapy", l: "185" }, { n: "(16) Periodontal instruments", l: "186" },
+          { n: "(17) Periodontal indices", l: "187" }, { n: "(18) Gingival and periodontal pocket", l: "188" },
+          { n: "(19) chemotherapy (systemic antibiotic)", l: "189" }, { n: "(20) Oral halitosis", l: "190" }
+        ]
+      },
+      "Prosthodontics": {
+        icon: "🦷", color: "#1a1a0d",
+        lectures: [
+          { n: "(1) Osteology", l: "193" }, { n: "(2) Myology", l: "194" },
+          { n: "(3) Diagnosis & Treatment Plan for RPD", l: "195" }, { n: "(4) Mouth Preparation for RPD", l: "196" },
+          { n: "(5) Impression for RPD", l: "197" }, { n: "(6) Secondary Impression for RPD", l: "198" },
+          { n: "(7) Support for Distal Extension base", l: "199" }, { n: "(8) RPD Framework Try In", l: "200" },
+          { n: "(9) Occlusal Relationships for RPD", l: "201" }, { n: "(10) Selection and arrangement of teeth", l: "202" },
+          { n: "(11) RPD Insertion and Recall Visits", l: "203" }, { n: "(12) pre prosthetic surgery", l: "204" },
+          { n: "(13) Diagnosis and treatment for CD", l: "205" }, { n: "(14) Complete Denture Impressions", l: "206" },
+          { n: "(15) Complete Denture Impressions - Part 2", l: "207" }, { n: "(16) Mandibular Movement & Jaw Relation", l: "208" },
+          { n: "(17) vertical jaw relation", l: "209" }, { n: "(18) Horizontal Jaw Relations", l: "210" },
+          { n: "(19) RCD Selection of Artificial Teeth and Try-in", l: "211" }, { n: "(20) Insertion of Complete Dentures", l: "212" },
+          { n: "(21) Post Insertion Problems in Complete Denture", l: "213" }, { n: "(22) Relining and Rebasing", l: "214" },
+          { n: "(23) Esthetic Denture Materials", l: "215" }, { n: "(24) Digital Denture", l: "216" }
+        ]
+      }
+    };
 
-  const main = document.getElementById('mainContent');
-  const tgBase = "https://t.me/alissrasubjects/";
+    const main = document.getElementById('mainContent');
+    const tgBase = "https://t.me/alissrasubjects/";
 
-  // Render Logic
-  Object.keys(curriculumData).forEach(subject => {
-    const data = curriculumData[subject];
-    const card = document.createElement('div');
-    card.className = 'subject-card';
-    card.dataset.subject = subject;
-    
-    let lecturesHTML = data.lectures.map(lec => `
+    // Render Logic
+    Object.keys(curriculumData).forEach(subject => {
+      const data = curriculumData[subject];
+      const card = document.createElement('div');
+      card.className = 'subject-card';
+      card.dataset.subject = subject;
+
+      let lecturesHTML = data.lectures.map(lec => `
       <li>
         <a href="${tgBase}${lec.l}" target="_blank" class="lecture-link">
           <div class="doc-pill">📄</div>
@@ -719,7 +1177,7 @@
       </li>
     `).join('');
 
-    card.innerHTML = `
+      card.innerHTML = `
       <button class="subject-header">
         <div class="s-icon" style="background: ${data.color}">${data.icon}</div>
         <div class="s-info">
@@ -730,131 +1188,248 @@
       </button>
       <ul class="lecture-list">${lecturesHTML}</ul>
     `;
-    main.appendChild(card);
-  });
-
-  // Accordion Logic
-  document.querySelectorAll('.subject-header').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.subject-card');
-      const isOpen = card.classList.contains('active');
-      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
-      if (!isOpen) card.classList.add('active');
+      main.appendChild(card);
     });
-  });
 
-  // Tab Filtering
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const filter = tab.dataset.filter;
+    // Accordion Logic
+    document.querySelectorAll('.subject-header').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.subject-card');
+        const isOpen = card.classList.contains('active');
+        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
+        if (!isOpen) card.classList.add('active');
+      });
+    });
+
+    // Tab Filtering
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.dataset.filter;
+        document.querySelectorAll('.subject-card').forEach(card => {
+          card.classList.toggle('hidden', filter !== 'all' && card.dataset.subject !== filter);
+        });
+      });
+    });
+
+    // Search Logic
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const q = this.value.toLowerCase();
       document.querySelectorAll('.subject-card').forEach(card => {
-        card.classList.toggle('hidden', filter !== 'all' && card.dataset.subject !== filter);
+        let match = false;
+        card.querySelectorAll('.lecture-link').forEach(link => {
+          const text = link.textContent.toLowerCase();
+          const isMatch = text.includes(q);
+          link.parentElement.style.display = isMatch ? 'block' : 'none';
+          if (isMatch) match = true;
+        });
+        card.classList.toggle('hidden', !match && q !== '');
+        if (q) card.classList.add('active');
       });
     });
-  });
 
-  // Search Logic
-  document.getElementById('searchInput').addEventListener('input', function() {
-    const q = this.value.toLowerCase();
-    document.querySelectorAll('.subject-card').forEach(card => {
-      let match = false;
-      card.querySelectorAll('.lecture-link').forEach(link => {
-        const text = link.textContent.toLowerCase();
-        const isMatch = text.includes(q);
-        link.parentElement.style.display = isMatch ? 'block' : 'none';
-        if (isMatch) match = true;
-      });
-      card.classList.toggle('hidden', !match && q !== '');
-      if (q) card.classList.add('active');
-    });
-  });
+    // Theme Toggle Logic
+    const themeToggle = document.getElementById('theme');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
 
-  // Theme Toggle Logic
-  const themeToggle = document.getElementById('theme');
-  const currentTheme = localStorage.getItem('theme') || 'dark';
-  
-  document.documentElement.setAttribute('data-theme', currentTheme);
-  themeToggle.checked = (currentTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    themeToggle.checked = (currentTheme === 'dark');
 
-  themeToggle.addEventListener('change', function(e) {
-    if (e.target.checked) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-    }
-  });
-
-  // Floating Dropdown Developer Info Logic
-  const avatarLink = document.querySelector('.avatar');
-  // Ensure avatar creates a strong stacking context
-  avatarLink.style.position = 'relative';
-  avatarLink.style.zIndex = '1000000';
-  
-  let dropdownPanel = null;
-  let connectorLine = null;
-  let isPanelOpen = false;
-
-  avatarLink.addEventListener('click', async function(e) {
-    e.preventDefault();
-    
-    if (!dropdownPanel) {
-      // Create the solid dark connecting bar INSIDE the avatar so it sits behind the picture
-      // Added a thin white border to the connector
-      connectorLine = document.createElement('div');
-      connectorLine.style.cssText = 'position: absolute; top: -1px; left: -1px; width: calc(100% + 2px); height: 95px; background: #0b0f1a; z-index: -1; opacity: 0; pointer-events: none; transition: opacity 0.3s; border-radius: 50px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 5px 15px rgba(0,0,0,0.5);';
-      avatarLink.appendChild(connectorLine);
-
-      dropdownPanel = document.createElement('div');
-      // Added a thin white border to the box and set fixed positioning without center alignment yet
-      dropdownPanel.style.cssText = 'position: fixed; top: 85px; width: 92%; max-width: 450px; height: 82vh; max-height: 750px; z-index: 999999; background: #0b0f1a; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 15px 40px rgba(0,0,0,0.6); transform: translateY(-20px); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow: hidden; display: flex; flex-direction: column;';
-      
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: transparent; border-radius: 20px;';
-      dropdownPanel.appendChild(iframe);
-      document.body.appendChild(dropdownPanel);
-
-      let devHtml = localStorage.getItem('developerInfoCacheV3');
-      if (!devHtml) {
-        try {
-          const res = await fetch('developer_info.html');
-          devHtml = await res.text();
-          localStorage.setItem('developerInfoCacheV3', devHtml);
-        } catch (err) {
-          window.location.href = 'developer_info.html'; // fallback
-          return;
-        }
+    themeToggle.addEventListener('change', function (e) {
+      if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
       }
-      iframe.srcdoc = devHtml;
+    });
+
+    // Floating Dropdown Developer Info Logic
+    const avatarLink = document.querySelector('.avatar');
+    // Ensure avatar creates a strong stacking context
+    avatarLink.style.position = 'relative';
+    avatarLink.style.zIndex = '1000000';
+
+    let dropdownPanel = null;
+    let connectorLine = null;
+    let isPanelOpen = false;
+
+    avatarLink.addEventListener('click', async function (e) {
+      e.preventDefault();
+
+      if (!dropdownPanel) {
+        // Create the solid dark connecting bar INSIDE the avatar so it sits behind the picture
+        // Added a thin white border to the connector
+        connectorLine = document.createElement('div');
+        connectorLine.style.cssText = 'position: absolute; top: -1px; left: -1px; width: calc(100% + 2px); height: 95px; background: #0b0f1a; z-index: -1; opacity: 0; pointer-events: none; transition: opacity 0.3s; border-radius: 50px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 5px 15px rgba(0,0,0,0.5);';
+        avatarLink.appendChild(connectorLine);
+
+        dropdownPanel = document.createElement('div');
+        // Added a thin white border to the box and set fixed positioning without center alignment yet
+        dropdownPanel.style.cssText = 'position: fixed; top: 85px; width: 92%; max-width: 450px; height: 82vh; max-height: 750px; z-index: 999999; background: #0b0f1a; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 15px 40px rgba(0,0,0,0.6); transform: translateY(-20px); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); overflow: hidden; display: flex; flex-direction: column;';
+
+        const iframe = document.createElement('iframe');
+        iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: transparent; border-radius: 20px;';
+        dropdownPanel.appendChild(iframe);
+        document.body.appendChild(dropdownPanel);
+
+        let devHtml = localStorage.getItem('developerInfoCacheV3');
+        if (!devHtml) {
+          try {
+            const res = await fetch('developer_info.html');
+            devHtml = await res.text();
+            localStorage.setItem('developerInfoCacheV3', devHtml);
+          } catch (err) {
+            window.location.href = 'developer_info.html'; // fallback
+            return;
+          }
+        }
+        iframe.srcdoc = devHtml;
+      }
+
+      // Align the box so its left edge matches the avatar's left edge
+      const avatarRect = avatarLink.getBoundingClientRect();
+      let boxLeft = avatarRect.left - 5;
+      if (boxLeft + 450 > window.innerWidth) {
+        boxLeft = window.innerWidth - 470; // Prevent pushing off screen on mobile
+      }
+      if (boxLeft < 10) boxLeft = 10;
+      dropdownPanel.style.left = `${boxLeft}px`;
+
+      // Toggle the floating card
+      if (isPanelOpen) {
+        dropdownPanel.style.transform = 'translateY(-20px)';
+        dropdownPanel.style.opacity = '0';
+        dropdownPanel.style.pointerEvents = 'none';
+        connectorLine.style.opacity = '0';
+        isPanelOpen = false;
+      } else {
+        dropdownPanel.style.transform = 'translateY(0)';
+        dropdownPanel.style.opacity = '1';
+        dropdownPanel.style.pointerEvents = 'auto';
+        connectorLine.style.opacity = '1';
+        isPanelOpen = true;
+      }
+    });
+
+    // Exam Road Logic
+    const examSchedule = [
+      { date: "2026-05-07", name: "pedo", type: "" },
+      { date: "2026-05-12", name: "conservative", type: "" },
+      { date: "2026-05-16", name: "O. Surgery", type: "" },
+      { date: "2026-05-21", name: "Pros", type: "" },
+      { date: "2026-05-24", name: "Medicine", type: "" },
+      { date: "2026-05-31", name: "Patho", type: "" },
+      { date: "2026-06-03", name: "Perio", type: "" },
+      { date: "2026-06-06", name: "G. Surgery", type: "" },
+      { date: "2026-06-09", name: "Ortho", type: "Final Exam" }
+    ];
+
+    let currentWeekOffset = 0;
+    const roadEl = document.getElementById('examRoad');
+    const prevBtn = document.getElementById('prevWeek');
+    const nextBtn = document.getElementById('nextWeek');
+
+    const arabicDays = {
+      'Sun': 'الأحد',
+      'Mon': 'الاثنين',
+      'Tue': 'الثلاثاء',
+      'Wed': 'الأربعاء',
+      'Thu': 'الخميس',
+      'Fri': 'الجمعة',
+      'Sat': 'السبت'
+    };
+
+    const examColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#F9D423", "#9B59B6", "#FA8072", "#2ECC71"];
+
+    function renderExamRoad() {
+      roadEl.innerHTML = '';
+      const today = new Date();
+
+      if (prevBtn) prevBtn.style.visibility = currentWeekOffset > 0 ? 'visible' : 'hidden';
+
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() + (currentWeekOffset * 7));
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(startDate);
+        d.setDate(startDate.getDate() + i);
+
+        const dateStr = d.toISOString().split('T')[0];
+        const isToday = d.toDateString() === today.toDateString();
+        const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+        const dayNum = d.getDate();
+        const monthNum = d.getMonth() + 1;
+
+        const stripe = document.createElement('div');
+        stripe.className = `day-stripe ${isToday ? 'today' : ''}`;
+
+        // Find exam and assign color based on its index in the main schedule
+        const examIdx = examSchedule.findIndex(e => e.date === dateStr);
+        const exam = examIdx !== -1 ? examSchedule[examIdx] : null;
+
+        if (exam) {
+          stripe.style.setProperty('--exam-color', examColors[examIdx % examColors.length]);
+        }
+
+        let contentHTML = '';
+
+        if (exam) {
+          contentHTML += `<div class="subject-name">${exam.name}</div>`;
+          contentHTML += `<div class="day-name-ar">${arabicDays[dayName] || ''}</div>`;
+        } else {
+          contentHTML += `<div class="subject-name" style="visibility:hidden">.</div>`;
+          contentHTML += `<div class="day-name-ar" style="visibility:hidden">.</div>`;
+        }
+
+        if (isToday) {
+          contentHTML += `
+            <div class="character-icon">
+              <svg viewBox="0 0 30 50" width="30" height="60">
+                <circle cx="15" cy="12" r="9" fill="white"/>
+                <path d="M15 22 L15 38 L8 50 M15 38 L22 50 M15 28 L7 32 M15 28 L23 32" stroke="white" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+            </div>
+          `;
+        } else {
+          contentHTML += `<div class="date-val">${monthNum}/${dayNum}</div>`;
+        }
+
+        contentHTML += `<div class="white-block"></div>`;
+
+        stripe.innerHTML = contentHTML;
+        roadEl.appendChild(stripe);
+      }
     }
 
-    // Align the box so its left edge matches the avatar's left edge
-    const avatarRect = avatarLink.getBoundingClientRect();
-    let boxLeft = avatarRect.left - 5;
-    if (boxLeft + 450 > window.innerWidth) {
-      boxLeft = window.innerWidth - 470; // Prevent pushing off screen on mobile
-    }
-    if (boxLeft < 10) boxLeft = 10;
-    dropdownPanel.style.left = `${boxLeft}px`;
+    nextBtn.addEventListener('click', () => {
+      currentWeekOffset++;
+      renderExamRoad();
+    });
 
-    // Toggle the floating card
-    if (isPanelOpen) {
-      dropdownPanel.style.transform = 'translateY(-20px)';
-      dropdownPanel.style.opacity = '0';
-      dropdownPanel.style.pointerEvents = 'none';
-      connectorLine.style.opacity = '0';
-      isPanelOpen = false;
-    } else {
-      dropdownPanel.style.transform = 'translateY(0)';
-      dropdownPanel.style.opacity = '1';
-      dropdownPanel.style.pointerEvents = 'auto';
-      connectorLine.style.opacity = '1';
-      isPanelOpen = true;
-    }
-  });
-</script>
+    prevBtn.addEventListener('click', () => {
+      if (currentWeekOffset > 0) {
+        currentWeekOffset--;
+        renderExamRoad();
+      }
+    });
+
+    // Schedule Accordion Logic
+    const schedAccordion = document.getElementById('scheduleAccordion');
+    const schedHeader = document.getElementById('scheduleHeader');
+    const schedContent = document.getElementById('scheduleContent');
+
+    schedHeader.addEventListener('click', () => {
+      schedAccordion.classList.toggle('active');
+      const isActive = schedAccordion.classList.contains('active');
+      schedHeader.setAttribute('aria-expanded', isActive);
+      schedContent.setAttribute('aria-hidden', !isActive);
+    });
+
+    renderExamRoad();
+  </script>
 </body>
+
 </html>
