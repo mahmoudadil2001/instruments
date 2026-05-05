@@ -1164,7 +1164,7 @@
           { n: "(11) odontogenic cysts", l: "88" }, { n: "(12) Odontogenic tumor", l: "89" },
           { n: "(13) developmental defects 1", l: "90" }, { n: "(14) developmental defects 2", l: "91" },
           { n: "(15) Oral mucosal lesions", l: "92" }, { n: "(16) Immune-Mediated disorders", l: "93" },
-          { n: "(17) Vesiculobullous lesions of oral cavity", l: "94" }
+          { n: "(17) Vesiculobullous lesions of oral cavity", l: "94" }, { n: "(18) Epithelial Pathology", l: "95" }
         ]
       },
       "Oral Surgery": {
@@ -1213,7 +1213,7 @@
           { n: "(7) morphology differences primary&permenent", l: "162" }, { n: "(8) Epstein pearls, bohn nodules, dental lamina cysts", l: "163" },
           { n: "(9) causes of delayed teeth eruption", l: "164" }, { n: "(10) Deep carious lesion treatment", l: "165" },
           { n: "(11) Restorative materials in pedodontic", l: "166" }, { n: "(12) pulp treatment", l: "167" },
-          { n: "(13) Local anesthesia and pain control", l: "168" }, { n: "(14) restoration of primary teeth", l: "217" }
+          { n: "(13) Local anesthesia and pain control", l: "168" }
         ]
       },
       "Periodontics": {
@@ -1450,7 +1450,7 @@
         const d = new Date(startDate);
         d.setDate(startDate.getDate() + i);
 
-        const dateStr = d.toISOString().split('T')[0];
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const isToday = d.toDateString() === today.toDateString();
         const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
         const dayNum = d.getDate();
