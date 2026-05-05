@@ -839,59 +839,78 @@
       animation: char-jump 0.6s ease-in-out infinite;
     }
 
-    .exam-road-footer {
-      padding: 18px 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      background: rgba(0, 0, 0, 0.15);
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
+    @keyframes char-pop {
+      0% { transform: scale(0) translateY(40px); opacity: 0; }
+      70% { transform: scale(1.1) translateY(-5px); opacity: 1; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
     }
 
-    .next-week-btn {
-      flex: 1;
-      background: linear-gradient(135deg, #1e2538 0%, #131929 100%);
-      border: 1px solid rgba(62, 207, 207, 0.15);
-      color: #3ecfcf;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.75rem;
+    .character-icon.pop-in {
+      animation: char-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      transform-origin: bottom center;
+    }
+
+    .slider-container {
+      padding: 15px 20px 25px;
+      width: 100%;
+      box-sizing: border-box;
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-family: 'Syne', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .next-week-btn:hover {
-      background: linear-gradient(135deg, #252e45 0%, #1a2236 100%);
-      border-color: var(--accent);
-      color: #fff;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(62, 207, 207, 0.25);
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      max-width: 400px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #4158D0;
+      /* Tick marks overlay */
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.3) 1px, transparent 1px),
+        linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+      background-size: calc(100% / var(--day-count, 1)) 100%, 100% 100%;
+      outline: none;
+      opacity: 0.8;
+      transition: opacity .2s;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .next-week-btn:active {
-      transform: translateY(-1px) scale(0.97);
+    .slider:hover {
+      opacity: 1;
     }
 
-    .next-week-btn span {
-      font-size: 1rem;
-      transition: transform 0.3s ease;
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #4c00ff;
+      background-image: linear-gradient(160deg, #4900f5 0%, #80D0C7 100%);
+      cursor: pointer;
+      border: 3px solid #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
     }
 
-    #nextWeek:hover span {
-      transform: translateX(4px);
+    .slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #0093E9;
+      background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+      cursor: pointer;
+      border: 3px solid #fff;
     }
 
-    #prevWeek:hover span {
-      transform: translateX(-4px);
+    @media (max-width: 600px) {
+      .slider-container {
+        padding: 10px 15px 20px;
+      }
+      .slider {
+        max-width: 100%;
+      }
     }
 
     @media (max-width: 600px) {
@@ -1043,16 +1062,11 @@
       <div class="schedule-content" id="scheduleContent" aria-hidden="true">
         <!-- Exam Road Component -->
         <div class="exam-road-container">
+          <div class="slider-container">
+            <input id="myRange" class="slider" value="0" max="100" min="0" type="range">
+          </div>
           <div class="exam-road" id="examRoad">
             <!-- JS generated content -->
-          </div>
-          <div class="exam-road-footer">
-            <button id="prevWeek" class="next-week-btn" style="visibility: hidden;">
-              <span>←</span> Previous Week
-            </button>
-            <button id="nextWeek" class="next-week-btn">
-              Next Week <span>→</span>
-            </button>
           </div>
         </div>
       </div>
@@ -1420,10 +1434,13 @@
       { date: "2026-06-09", name: "Ortho", type: "Final Exam" }
     ];
 
-    let currentWeekOffset = 0;
+    let currentDayOffset = 0;
+    let isFollowing = false;
+    let hasFollowedInThisSession = false;
+    let followTimer = null;
+    let followMessageTimer = null;
     const roadEl = document.getElementById('examRoad');
-    const prevBtn = document.getElementById('prevWeek');
-    const nextBtn = document.getElementById('nextWeek');
+    const slider = document.getElementById('myRange');
 
     const arabicDays = {
       'Sun': 'الأحد',
@@ -1437,14 +1454,122 @@
 
     const examColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#F9D423", "#9B59B6", "#FA8072", "#2ECC71"];
 
+    // Audio Context for the "Tick" sound
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = AudioContext ? new AudioContext() : null;
+
+    function playTick() {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+      
+      // Mechanical "Lock" sound profile
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.03);
+      
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(600, now);
+      
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.03);
+      
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(now + 0.03);
+    }
+
+    // Initialize Slider Range
+    function initSlider() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const lastExam = examSchedule[examSchedule.length - 1];
+      const lastDate = new Date(lastExam.date);
+      lastDate.setHours(0, 0, 0, 0);
+
+      const diffTime = lastDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      // Slider max is total days minus 6 so the last day shown is the last exam
+      slider.max = Math.max(0, diffDays);
+      slider.value = 0;
+      
+      // Set the CSS variable for tick lines
+      slider.style.setProperty('--day-count', diffDays || 1);
+    }
+
     function renderExamRoad() {
       roadEl.innerHTML = '';
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      if (prevBtn) prevBtn.style.visibility = currentWeekOffset > 0 ? 'visible' : 'hidden';
+      const val = parseInt(slider.value);
+      const totalMax = parseInt(slider.max);
+
+      // Smoothly shift the window so at max value, the last exam is the last stripe
+      let startOffset = val;
+      if (totalMax > 6) {
+        startOffset = Math.floor((val / totalMax) * (totalMax - 6));
+      }
 
       const startDate = new Date(today);
-      startDate.setDate(today.getDate() + (currentWeekOffset * 7));
+      startDate.setDate(today.getDate() + startOffset);
+
+      let todayFound = false;
+
+      // First pass to check if today is in view
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(startDate);
+        d.setDate(startDate.getDate() + i);
+        if (d.toDateString() === today.toDateString()) todayFound = true;
+      }
+
+      if (todayFound) {
+        isFollowing = false;
+        hasFollowedInThisSession = false;
+        if (followTimer) { clearTimeout(followTimer); followTimer = null; }
+        if (followMessageTimer) { clearTimeout(followMessageTimer); followMessageTimer = null; }
+      } else if (!isFollowing && !followTimer && !hasFollowedInThisSession) {
+        followTimer = setTimeout(() => {
+          isFollowing = true;
+          hasFollowedInThisSession = true;
+          followTimer = null;
+          renderExamRoad();
+          
+          // Clear any previous message timer
+          if (followMessageTimer) clearTimeout(followMessageTimer);
+          // Character stays for 4 seconds then "returns"
+          followMessageTimer = setTimeout(() => {
+            isFollowing = false;
+            followMessageTimer = null;
+            renderExamRoad();
+          }, 4000);
+        }, 2000);
+      }
+
+      let followingIndex = -1;
+      if (isFollowing) {
+        // Find first non-exam day to stand on
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(startDate);
+          d.setDate(startDate.getDate() + i);
+          const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          const hasExam = examSchedule.some(e => e.date === dateStr);
+          if (!hasExam) {
+            followingIndex = i;
+            break;
+          }
+        }
+        // Fallback to first day if all are exams
+        if (followingIndex === -1) followingIndex = 0;
+      }
 
       for (let i = 0; i < 7; i++) {
         const d = new Date(startDate);
@@ -1459,7 +1584,6 @@
         const stripe = document.createElement('div');
         stripe.className = `day-stripe ${isToday ? 'today' : ''}`;
 
-        // Find exam and assign color based on its index in the main schedule
         const examIdx = examSchedule.findIndex(e => e.date === dateStr);
         const exam = examIdx !== -1 ? examSchedule[examIdx] : null;
 
@@ -1481,11 +1605,15 @@
           }
         }
 
-        if (isToday) {
+        // Render character if it's today OR if it's the chosen following index
+        if (isToday || (isFollowing && i === followingIndex)) {
+          const isForced = isFollowing && !isToday;
           contentHTML += `
             <div class="character-wrap">
-              <div class="speech-bubble" id="speechBubble"></div>
-              <div class="character-icon" id="charIcon">
+              <div class="speech-bubble ${isForced ? 'visible' : ''}" id="speechBubble">
+                ${isForced ? 'ارجع لليوم الحالي شتسوي هنا 🤨' : ''}
+              </div>
+              <div class="character-icon animating ${isForced ? 'pop-in' : ''}" id="charIcon">
                 <svg viewBox="0 0 30 50" width="30" height="60">
                   <circle cx="15" cy="12" r="9" fill="white"/>
                   <path d="M15 22 L15 38 L8 50 M15 38 L22 50 M15 28 L7 32 M15 28 L23 32" stroke="white" stroke-width="4" stroke-linecap="round"/>
@@ -1493,31 +1621,40 @@
               </div>
             </div>
           `;
+          // If we forced it, make sure the text is correct even if interval update happens
+          if (isForced) setTimeout(updateSpeechBubble, 10);
         } else {
           contentHTML += `<div class="date-val">${monthNum}/${dayNum}</div>`;
         }
 
         contentHTML += `<div class="white-block"></div>`;
-
         stripe.innerHTML = contentHTML;
         roadEl.appendChild(stripe);
       }
     }
 
-    nextBtn.addEventListener('click', () => {
-      currentWeekOffset++;
+    let lastSliderVal = slider.value;
+    slider.addEventListener('input', () => {
+      if (slider.value !== lastSliderVal) {
+        playTick();
+        lastSliderVal = slider.value;
+        // Reset follow timer on slide
+        if (followTimer) { clearTimeout(followTimer); followTimer = null; }
+      }
       renderExamRoad();
     });
-
-    prevBtn.addEventListener('click', () => {
-      if (currentWeekOffset > 0) {
-        currentWeekOffset--;
-        renderExamRoad();
-      }
-    });
+    initSlider();
 
     // Speech Bubble & Countdown Logic
     function updateSpeechBubble() {
+      const bubble = document.getElementById('speechBubble');
+      if (!bubble) return;
+
+      if (isFollowing) {
+        bubble.innerHTML = `ارجع لليوم الحالي شتسوي هنا 🤨`;
+        return;
+      }
+
       const now = new Date();
       // Find next exam starting at 8:30 AM
       const nextExam = examSchedule.find(e => {
@@ -1534,10 +1671,7 @@
       const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-      const bubble = document.getElementById('speechBubble');
-      if (bubble) {
-        bubble.innerHTML = ` الامتحان الجاي بعد <span style="color:#000">${d} يوم</span> و <span style="color:#000">${h} ساعة</span> و <span style="color:#000">${m} دقيقة</span>`;
-      }
+      bubble.innerHTML = ` الامتحان الجاي بعد <span style="color:#000">${d} يوم</span> و <span style="color:#000">${h} ساعة</span> و <span style="color:#000">${m} دقيقة</span>`;
     }
 
     // Interval for 7s ON, 7s OFF cycle
